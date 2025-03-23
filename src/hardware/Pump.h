@@ -8,7 +8,8 @@ private:
     int pin;
     bool state;
 public:
-    Pump(int pin);
+    int id;
+    Pump(int pin, int id);
     void setState(bool newState);
     bool getState();
 };

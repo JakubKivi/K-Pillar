@@ -2,10 +2,11 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Keypad.h>
-#include "Pump.h"
-#include "Relay.h"
-#include "Schedule.h"
-#include "Menu.h"
+#include "hardware/Pump.h"
+#include "hardware/Relay.h"
+#include "logic/Schedule.h"
+#include "ui/Menu.h"
+#include "power/PowerManager.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -22,28 +23,33 @@ byte colPins[COLS] = {6, 7, 8};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-Pump pump1(A0);
-Pump pump2(A1);
-Pump pump3(A2);
+Pump pump1(A0, 1);
+Pump pump2(A1, 2);
+Pump pump3(A2, 3);
 Relay relay(A3);
 
-Schedule schedule1(&pump1, 30000);
-Schedule schedule2(&pump2, 45000);
-Schedule schedule3(&pump3, 60000);
+Schedule schedule1(&pump1, 60000*3, &lcd);
+Schedule schedule2(&pump2, 60000*6, &lcd);
+Schedule schedule3(&pump3, 60000*8, &lcd);
 
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
-Menu menu(&lcd, &keypad, schedules);
+Menu menu(&lcd, &keypad, schedules, &powerManager);  
+
+PowerManager powerManager(&lcd, &keypad);
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(9600);
     lcd.init();
-    lcd.backlight();
-    lcd.clear();
+    powerManager.wakeUp();
 }
 
 void loop() {
+    // delay(INT32_MAX);
+    powerManager.update();
+
     menu.update();
     schedule1.update();
     schedule2.update();
     schedule3.update();
+    delay(100);
 }
