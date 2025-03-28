@@ -22,6 +22,7 @@ public:
     Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], PowerManager* powerManager);
     void update();
     void displayScreen();
+    MenuScreen getCurrentScreen() const;
 };
 
 #endif

@@ -2,10 +2,11 @@
 #include "utils/utils.h"
 
 Menu::Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], PowerManager* powerManager)
-    : lcd(lcd), keypad(keypad), powerManager(powerManager), currentScreen(PUMP1), isEditing(false) {
+    : lcd(lcd), keypad(keypad), powerManager(powerManager), isEditing(false) {
     for (int i = 0; i < 3; i++) {
         this->schedules[i] = schedules[i];
     }
+    currentScreen=PUMP1;
 }
 
 void Menu::update() {
@@ -46,37 +47,31 @@ void Menu::update() {
 
 void Menu::displayScreen() {
     lcd->clear();
-    switch (currentScreen) {
-        case PUMP1:
-        case PUMP2:
-        case PUMP3:
-            lcd->setCursor(0, 0);
-            lcd->print("Pump ");
-            lcd->print(currentScreen + 1);
-            lcd->setCursor(0, 1);
-            if (isEditing) {
+    if(isEditing){
+        switch (currentScreen) {
+            case PUMP1:
+            case PUMP2:
+            case PUMP3:
                 lcd->print("Set: ");
                 lcd->print(inputBuffer);
-            } else {
-                lcd->print(formatTime(schedules[currentScreen]->getInterval()));
-            }
-            break;
-        case RELAY:
-            lcd->setCursor(0, 0);
-            lcd->print("Relay");
-            lcd->setCursor(0, 1);
-            if (isEditing) {
+                break;
+            case RELAY:
                 lcd->print("Set: ");
                 lcd->print(inputBuffer);
-            } else {
-                lcd->print(formatTime(schedules[currentScreen]->getInterval()));
-            }
-            break;
-        case ABOUT:
-            lcd->setCursor(0, 0);
-            lcd->print("   Created by");
-            lcd->setCursor(0, 1);
-            lcd->print("   JakubKivi");
-            break;
+                break;
+            case ABOUT:
+                lcd->setCursor(0, 0);
+                lcd->print("   Kupa");
+                lcd->setCursor(0, 1);
+                lcd->print("   Dupa");
+                break;
+        }
+    }else{
+        lcdDrawMenu(lcd, currentScreen, schedules[currentScreen]->getInterval());
     }
+    
+}
+
+MenuScreen Menu::getCurrentScreen() const{ 
+    return currentScreen;
 }
