@@ -7,20 +7,24 @@
 #include "logic/Schedule.h"
 #include "power/PowerManager.h"
 
-enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, ABOUT };
+enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, MANUAL, ABOUT };
+enum MenuSubScreen { ENABLE, FREQ, AMMOUNT };
 
 class Menu {
 private:
     LiquidCrystal_I2C* lcd;
     Keypad* keypad;
     Schedule* schedules[3];
-    PowerManager* powerManager;
+
     MenuScreen currentScreen;
-    bool isEditing;
+    MenuSubScreen currentSubScreen;    
+
     String inputBuffer;
+    bool isSubmenu;
+    bool isEditing;
 public:
-    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], PowerManager* powerManager);
-    void update();
+    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[]);
+    void update(char key);
     void displayScreen();
     MenuScreen getCurrentScreen() const;
 };

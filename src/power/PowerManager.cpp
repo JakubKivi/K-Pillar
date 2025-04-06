@@ -13,9 +13,8 @@ void PowerManager::update() {
         }
         return;
     }
-
-    if (millis() - lastInteractionTime > 30000) {
-        //goToSleep();
+    if (millis() - lastInteractionTime > 45000) {
+        // goToSleep(); TODO nie działa nie wybudza
         Serial.println("Sleeping");
     }
 }

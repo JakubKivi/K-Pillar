@@ -8,15 +8,20 @@
 class Schedule {
 private:
     Pump* pump;
+    bool enabled;
     unsigned long interval;
-    unsigned long water;
+    unsigned long waterAmmount;
     unsigned long lastWatered;
     LiquidCrystal_I2C* lcd;
 public:
-    Schedule(Pump* pump, unsigned long interval, unsigned long water, LiquidCrystal_I2C* lcd);
-    void update(int currentMenuScreen);
+    Schedule(Pump* pump, bool enabled, unsigned long interval, unsigned long waterAmmount, LiquidCrystal_I2C* lcd);
+    bool update();
+    unsigned long getAmmount();
+
     void setInterval(unsigned long newInterval);
     unsigned long getInterval();
+    bool getEnabled();
+    void setEnabled(bool input);
 };
 
 #endif
