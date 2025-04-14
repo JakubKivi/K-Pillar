@@ -16,17 +16,33 @@ private:
     Keypad* keypad;
     Schedule* schedules[3];
 
-    MenuScreen currentScreen;
-    MenuSubScreen currentSubScreen;    
+    MenuScreen currentScreen = PUMP1;
+    MenuSubScreen currentSubScreen = ENABLE;    
 
-    String inputBuffer;
-    bool isSubmenu;
-    bool isEditing;
+    String inputBuffer = "";
+    bool isSubmenu = false;
+    bool isEditing = false;
+
+    String formatTime(unsigned long milliseconds);
+    String formatAmount(unsigned long time);
+    String centerText(const char* text);
+    String formatEditText(String text);
+
+    void updateSchedule();
+
+    void lcdDrawMenu();
+    void lcdDrawSubMenu();
+    void lcdDrawEditing();
+    String fillEmpty(String input);
+
 public:
     Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[]);
     void update(char key);
     void displayScreen();
     MenuScreen getCurrentScreen() const;
+    
+    void lcdCreateCustomCharacters();
+    void lcdCreateHomeScreen();
 };
 
 #endif

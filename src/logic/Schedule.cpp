@@ -1,5 +1,4 @@
 #include "Schedule.h"
-#include "utils/utils.h"
 
 Schedule::Schedule(Pump* pump, bool enabled, unsigned long interval, unsigned long waterAmmount, LiquidCrystal_I2C* lcd)
     : pump(pump), enabled(enabled), interval(interval), waterAmmount(waterAmmount), lastWatered(0),  lcd(lcd) {}
@@ -32,8 +31,13 @@ unsigned long Schedule::getAmmount(){
     return waterAmmount;
 }
 
-void Schedule::setInterval(unsigned long newInterval) {
-    interval = newInterval;
+void Schedule::setAmmount(String ammount){
+    
+    waterAmmount= ammount.toInt();
+}
+
+void Schedule::setInterval(String newInterval) {
+    interval = newInterval.substring(0,2).toInt() * 86400000  + newInterval.substring(2,4).toInt() * 3600000 + newInterval.substring(4,6).toInt() * 60000;
 }
 
 unsigned long Schedule::getInterval() {

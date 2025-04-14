@@ -16,10 +16,13 @@ private:
 public:
     Schedule(Pump* pump, bool enabled, unsigned long interval, unsigned long waterAmmount, LiquidCrystal_I2C* lcd);
     bool update();
-    unsigned long getAmmount();
 
-    void setInterval(unsigned long newInterval);
+    unsigned long getAmmount();
+    void setAmmount(String ammount);
+
+    void setInterval(String newInterval);
     unsigned long getInterval();
+
     bool getEnabled();
     void setEnabled(bool input);
 };
