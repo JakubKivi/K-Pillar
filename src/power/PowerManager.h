@@ -12,6 +12,8 @@ private:
     Keypad* keypad;
     unsigned long lastInteractionTime;
     bool isSleeping;
+    
+    static volatile bool wakeUpFlag;
 public:
     PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad);
     void update();
