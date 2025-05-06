@@ -18,8 +18,8 @@ char keys[ROWS][COLS] = {
     {'7', '8', '9'},
     {'*', '0', '#'}
 };
-byte rowPins[ROWS] = {2, 3, 4, 5};
-byte colPins[COLS] = {6, 7, 8};
+byte rowPins[ROWS] = {3, 4, 5, 6};
+byte colPins[COLS] = {7, 8, 12};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
@@ -51,6 +51,7 @@ void loop() {
     powerManager.update();
     char key = keypad.getKey();
     if (key) {
+        Serial.println(key);
         powerManager.resetTimer();  // Reset licznika usypiania
         
         menu.update(key);

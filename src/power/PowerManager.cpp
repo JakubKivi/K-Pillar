@@ -13,7 +13,7 @@ void PowerManager::update() {
         return;
     }
     if (millis() - lastInteractionTime > 5000) {
-        goToSleep(); 
+        // goToSleep(); 
         Serial.println("Sleeping");
     }
 }
