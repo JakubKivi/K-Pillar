@@ -1,19 +1,20 @@
 #include "PowerManager.h"
 
-
-PowerManager::PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad)
-    : lcd(lcd), keypad(keypad), lastInteractionTime(0), isSleeping(false) {}
+PowerManager::PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad, int noInteractionThreshhold)
+    : lcd(lcd), keypad(keypad), lastInteractionTime(0), noInteractionThreshhold(noInteractionThreshhold) {}
 
 void PowerManager::update() {
-    if (isSleeping) {
-        if (wakeUpFlag) {
-            wakeUp();
-            wakeUpFlag = false;
-        }
+    Serial.println("xd");
+    
+    if (wakeUpFlag) {
+        Serial.println("1");
+        wakeUp();
+        wakeUpFlag = false;
         return;
     }
-    if (millis() - lastInteractionTime > 5000) {
-        // goToSleep(); 
+
+    if (millis() - lastInteractionTime > noInteractionThreshhold) {
+        goToSleep(); 
         Serial.println("Sleeping");
     }
 }
@@ -24,40 +25,37 @@ void PowerManager::resetTimer() {
 
 void PowerManager::goToSleep() {
     lcd->noBacklight();
-    isSleeping = true;
+    
     Serial.println("Sleeping...");
 
-    const byte ROWS = 4;
-    const byte COLS = 3;
-    byte rowPins[ROWS] = {2, 3, 4, 5};
-    byte colPins[COLS] = {6, 7, 8};
-
-    for (int i = 0; i < 4; i++) {
-        pinMode(rowPins[i], INPUT_PULLUP);
-      }
-
-      for (int i = 0; i < 3; i++) {
-        pinMode(colPins[i], OUTPUT);
-        digitalWrite(colPins[i], LOW);
-      }
+    pinMode(3, INPUT_PULLUP);    
+    pinMode(7, OUTPUT);
+    pinMode(8, OUTPUT);
+    pinMode(12, OUTPUT);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    digitalWrite(12, LOW);    
     
-    delay(1000);
+    attachInterrupt(digitalPinToInterrupt(3), PowerManager::wakeUpISR, FALLING);
+
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-
-    attachInterrupt(digitalPinToInterrupt(2), wakeUpISR, FALLING);
-    attachInterrupt(digitalPinToInterrupt(3), wakeUpISR, FALLING);
-
     sleep_cpu();
-
+    // -- tu MCU śpi, aż przyjdzie FALLING na pinie 3 --
     sleep_disable();
-    detachInterrupt(digitalPinToInterrupt(2));
     detachInterrupt(digitalPinToInterrupt(3));
+    
+    pinMode(3, OUTPUT);    
+    pinMode(7, INPUT_PULLUP);
+    pinMode(8, INPUT_PULLUP);
+    pinMode(12, INPUT_PULLUP);
+    
+    PowerManager::wakeUpFlag = false;
 }
 
 void PowerManager::wakeUp() {
+    Serial.println("3");
     lcd->backlight();
-    isSleeping = false;
     lastInteractionTime = millis();
     Serial.println("Waking up...");
 }
@@ -65,6 +63,7 @@ void PowerManager::wakeUp() {
 volatile bool PowerManager::wakeUpFlag = false;
 
 void PowerManager::wakeUpISR() {
+    Serial.println("2");
     PowerManager::wakeUpFlag = true;
 }
 

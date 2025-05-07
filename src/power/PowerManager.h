@@ -11,11 +11,11 @@ private:
     LiquidCrystal_I2C* lcd;
     Keypad* keypad;
     unsigned long lastInteractionTime;
-    bool isSleeping;
+    int noInteractionThreshhold;
     
     static volatile bool wakeUpFlag;
 public:
-    PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad);
+    PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad,int noInteractionThreshhold);
     void update();
     void resetTimer();
     void goToSleep();

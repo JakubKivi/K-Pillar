@@ -39,7 +39,7 @@ Schedule schedule3(&pump3, 0, 60000*13, 7000, &lcd);
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 Menu menu(&lcd, &keypad, schedules);  
 
-PowerManager powerManager(&lcd, &keypad);
+PowerManager powerManager(&lcd, &keypad, 5000);
 
 void setup() {
     Serial.begin(9600);
