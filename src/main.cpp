@@ -7,6 +7,10 @@
 #include "logic/Schedule.h"
 #include "ui/Menu.h"
 #include "power/PowerManager.h"
+#include <Wire.h>
+#include <I2C_RTC.h>
+
+static DS1307 RTC;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -44,6 +48,13 @@ void setup() {
     menu.lcdCreateCustomCharacters();
     menu.lcdCreateHomeScreen();
     menu.displayScreen();
+
+	// RTC.setDate(07,05,25);
+	// RTC.setTime(17,27,20);
+    if(RTC.isConnected() == false)
+	{
+		Serial.println("RTC Not Connected!");
+    }
 }
 
 void loop() {
@@ -59,5 +70,7 @@ void loop() {
 
     if(schedule1.update() or schedule2.update() or schedule3.update()) 
         menu.displayScreen();
+
+    // Serial.println(RTC.getDateTimeString());
     delay(100);
 }
