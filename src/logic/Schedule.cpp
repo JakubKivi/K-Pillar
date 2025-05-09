@@ -1,12 +1,12 @@
 #include "Schedule.h"
 
 Schedule::Schedule(Pump* pump, bool enabled, unsigned long interval, unsigned long waterAmmount, LiquidCrystal_I2C* lcd)
-    : pump(pump), enabled(enabled), interval(interval), waterAmmount(waterAmmount), lastWatered(0),  lcd(lcd) {}
+    : pump(pump), enabled(enabled), waterAmmount(waterAmmount), lastWatered(0),  lcd(lcd) {}
 
 bool Schedule::update() {
 
     if( enabled && waterAmmount > 0 ){
-        if (millis() - lastWatered >= interval) {
+        if (false     ) {  //TODO warunek cały skonstruować
             lcd->clear();
             lcd->setCursor(0, 0);
             String message = String(" Irrigating [")+ String(pump->id) + String("]");
@@ -37,11 +37,11 @@ void Schedule::setAmmount(String ammount){
 }
 
 void Schedule::setInterval(String newInterval) {
-    interval = newInterval.substring(0,2).toInt() * 86400000  + newInterval.substring(2,4).toInt() * 3600000 + newInterval.substring(4,6).toInt() * 60000;
+    DEPRECATED_interval = newInterval.substring(0,2).toInt() * 86400000  + newInterval.substring(2,4).toInt() * 3600000 + newInterval.substring(4,6).toInt() * 60000;
 }
 
 unsigned long Schedule::getInterval() {
-    return interval;
+    return DEPRECATED_interval;
 }
 
 bool Schedule::getEnabled(){

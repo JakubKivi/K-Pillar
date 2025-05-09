@@ -39,7 +39,7 @@ Schedule schedule3(&pump3, 0, 60000*13, 7000, &lcd);
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 Menu menu(&lcd, &keypad, schedules);  
 
-PowerManager powerManager(&lcd, &keypad, 5000);
+PowerManager powerManager(&lcd, &keypad, 60000);
 
 void setup() {
     Serial.begin(9600);
@@ -71,6 +71,7 @@ void loop() {
     if(schedule1.update() or schedule2.update() or schedule3.update()) 
         menu.displayScreen();
 
-    // Serial.println(RTC.getDateTimeString());
+     Serial.println(RTC.getDateTimeString());
     delay(100);
+    
 }

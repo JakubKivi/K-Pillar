@@ -4,12 +4,16 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include "hardware/Pump.h"
+#include "logic/Time.h"
 
 class Schedule {
 private:
     Pump* pump;
+    
     bool enabled;
-    unsigned long interval;
+    unsigned int intervalDays;
+    Time irrigatingTime;
+
     unsigned long waterAmmount;
     unsigned long lastWatered;
     LiquidCrystal_I2C* lcd;
