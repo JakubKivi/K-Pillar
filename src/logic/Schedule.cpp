@@ -36,12 +36,12 @@ void Schedule::setAmmount(String ammount){
     waterAmmount= ammount.toInt();
 }
 
-void Schedule::setInterval(String newInterval) {
-    DEPRECATED_interval = newInterval.substring(0,2).toInt() * 86400000  + newInterval.substring(2,4).toInt() * 3600000 + newInterval.substring(4,6).toInt() * 60000;
-}
+// void Schedule::setInterval(String newInterval) {
+//     intervalDays = newInterval.toInt();
+// }
 
 unsigned long Schedule::getInterval() {
-    return DEPRECATED_interval;
+    return intervalDays;
 }
 
 bool Schedule::getEnabled(){

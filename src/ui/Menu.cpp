@@ -276,8 +276,8 @@ void Menu::lcdCreateHomeScreen(){
 void Menu::updateSchedule(){
     if (currentSubScreen == FREQ)
     {
-        schedules[currentScreen]->setInterval(inputBuffer);
+        // schedules[currentScreen]->setInterval(inputBuffer);
     }else{
-        schedules[currentScreen]->setAmmount(inputBuffer);
+        // schedules[currentScreen]->setAmmount(inputBuffer);
     }
 }

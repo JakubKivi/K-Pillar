@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include "hardware/Pump.h"
-#include "logic/Time.h"
+#include "logic/TimeStruct.h"
 
 class Schedule {
 private:
@@ -12,7 +12,7 @@ private:
     
     bool enabled;
     unsigned int intervalDays;
-    Time irrigatingTime;
+    // TimeStruct irrigatingTime;
 
     unsigned long waterAmmount;
     unsigned long lastWatered;
@@ -24,7 +24,7 @@ public:
     unsigned long getAmmount();
     void setAmmount(String ammount);
 
-    void setInterval(String newInterval);
+    // void setInterval(String newInterval);
     unsigned long getInterval();
 
     bool getEnabled();
