@@ -32,9 +32,9 @@ Pump pump2(A1, 2);
 Pump pump3(A2, 3);
 Relay relay(A3);
 
-Schedule schedule1(&pump1, 0, 60000*5, 3000, &lcd);
-Schedule schedule2(&pump2, 0, 60000*2, 2000, &lcd);
-Schedule schedule3(&pump3, 0, 60000*13, 7000, &lcd);
+Schedule schedule1(&pump1, 0, 2, TimeStruct(17, 00), 3000, &lcd);
+Schedule schedule2(&pump2, 0, 3, TimeStruct(17, 00), 2000, &lcd);
+Schedule schedule3(&pump3, 0, 5, TimeStruct(17, 00), 7000, &lcd);
 
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 Menu menu(&lcd, &keypad, schedules);  
@@ -62,16 +62,18 @@ void loop() {
     powerManager.update();
     char key = keypad.getKey();
     if (key) {
-        Serial.println(key);
+        // Serial.println(key);
         powerManager.resetTimer();  // Reset licznika usypiania
         
         menu.update(key);
     }
 
-    if(schedule1.update() or schedule2.update() or schedule3.update()) 
-        menu.displayScreen();
+    // Serial.println(schedule1.getInterval());
 
-     Serial.println(RTC.getDateTimeString());
+    if(schedule1.update(&RTC) or schedule2.update(&RTC) or schedule3.update(&RTC)) 
+        menu.displayScreen();   
+
+    //  Serial.println(RTC.getDateTimeString());
     delay(100);
     
 }

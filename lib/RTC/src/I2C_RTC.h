@@ -34,6 +34,7 @@
  *************************************************************************/
 
 #ifndef RTC_H
+#define RTC_H
 
 #ifndef UNIX_OFFSET
 #define UNIX_OFFSET 946684800

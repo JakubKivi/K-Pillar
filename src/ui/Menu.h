@@ -6,9 +6,11 @@
 #include <Keypad.h>
 #include "logic/Schedule.h"
 #include "power/PowerManager.h"
+#include "logic/TimeStruct.h"
+#include "logic/TimeStruct.h"
 
 enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, MANUAL, ABOUT };
-enum MenuSubScreen { ENABLE, FREQ, AMMOUNT };
+enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT };
 
 class Menu {
 private:
@@ -23,10 +25,10 @@ private:
     bool isSubmenu = false;
     bool isEditing = false;
 
-    String formatTime(unsigned long milliseconds);
-    String formatAmount(unsigned long time);
+    String formatTime(TimeStruct time);
+    String formatEditTime(String input);
+    String formatAmount(unsigned long ammount);
     String centerText(const char* text);
-    String formatEditText(String text);
 
     void updateSchedule();
 

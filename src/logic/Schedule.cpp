@@ -1,9 +1,11 @@
 #include "Schedule.h"
 
-Schedule::Schedule(Pump* pump, bool enabled, unsigned long interval, unsigned long waterAmmount, LiquidCrystal_I2C* lcd)
-    : pump(pump), enabled(enabled), waterAmmount(waterAmmount), lastWatered(0),  lcd(lcd) {}
+Schedule::Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, LiquidCrystal_I2C* lcd)
+    : pump(pump), enabled(enabled), intervalDays(intervalDays), wtrTime(wtrTime), waterAmmount(waterAmmount), lastWatered(0),  lcd(lcd) {}
 
-bool Schedule::update() {
+bool Schedule::update(DS1307* RTC) {
+
+    // RTC.
 
     if( enabled && waterAmmount > 0 ){
         if (false     ) {  //TODO warunek cały skonstruować
@@ -32,13 +34,12 @@ unsigned long Schedule::getAmmount(){
 }
 
 void Schedule::setAmmount(String ammount){
-    
     waterAmmount= ammount.toInt();
 }
 
-// void Schedule::setInterval(String newInterval) {
-//     intervalDays = newInterval.toInt();
-// }
+void Schedule::setInterval(String newInterval) {
+    intervalDays = newInterval.toInt();
+}
 
 unsigned long Schedule::getInterval() {
     return intervalDays;
@@ -50,4 +51,19 @@ bool Schedule::getEnabled(){
 
 void Schedule::setEnabled(bool input){
     enabled = input;
+}
+
+TimeStruct Schedule::getWtrTime(){
+    return wtrTime;
+}
+
+void Schedule::setWtrTime(TimeStruct input){
+    wtrTime = input;
+}
+
+void Schedule::setWtrTime(String input){
+
+    wtrTime = TimeStruct( input.substring(0,2).toInt(), input.substring(2,4).toInt() );
+
+    //wtrTime = input;
 }
