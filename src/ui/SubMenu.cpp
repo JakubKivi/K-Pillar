@@ -4,9 +4,13 @@
 void Menu::lcdDrawSubMenu(){
     lcd->clear();
     lcd->setCursor(0, 0);
-    if(currentScreen == MANUAL){
-        lcd->print("TODO");
-    }else{
+    if(currentScreen == SETTINGS){
+            lcd->write(byte(0));
+            lcd->print("4    Time    6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(formatTime(getCurrentTime()).c_str()));
+    }else{   // PUMP1, PUMP2, PUMP3, RELAY
         String line;
         Serial.println(currentSubScreen);
         switch (currentSubScreen)

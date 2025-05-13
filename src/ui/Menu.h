@@ -9,17 +9,22 @@
 #include "logic/TimeStruct.h"
 #include "logic/TimeStruct.h"
 
-enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, MANUAL, ABOUT };
+enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS, ABOUT };
 enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT };
+
+enum MenuSettings {TIME};
 
 class Menu {
 private:
     LiquidCrystal_I2C* lcd;
     Keypad* keypad;
     Schedule* schedules[3];
+    DS1307* RTC;
 
     MenuScreen currentScreen = PUMP1;
     MenuSubScreen currentSubScreen = ENABLE;    
+
+    TimeStruct currentTime;
 
     String inputBuffer = "";
     bool isSubmenu = false;
@@ -38,10 +43,13 @@ private:
     String fillEmpty(String input);
 
 public:
-    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[]);
+    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC);
     void update(char key);
     void displayScreen();
     MenuScreen getCurrentScreen() const;
+
+    TimeStruct getCurrentTime();
+    void setCurrentTime(TimeStruct input, bool updateRTC);
     
     void lcdCreateCustomCharacters();
     void lcdCreateHomeScreen();

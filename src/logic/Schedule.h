@@ -16,11 +16,15 @@ private:
     TimeStruct wtrTime;
 
     unsigned long waterAmmount;
-    unsigned long lastWatered;
+
+
     LiquidCrystal_I2C* lcd;
 public:
+    void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount);
+
+    bool wateredToday=0;
     Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, LiquidCrystal_I2C* lcd);
-    bool update(DS1307* RTC);
+    bool update(TimeStruct currentTime);
 
     unsigned long getAmmount();
     void setAmmount(String ammount);

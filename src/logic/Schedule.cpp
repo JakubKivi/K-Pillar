@@ -1,14 +1,21 @@
 #include "Schedule.h"
 
 Schedule::Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, LiquidCrystal_I2C* lcd)
-    : pump(pump), enabled(enabled), intervalDays(intervalDays), wtrTime(wtrTime), waterAmmount(waterAmmount), lastWatered(0),  lcd(lcd) {}
+    : pump(pump), enabled(enabled), intervalDays(intervalDays), wtrTime(wtrTime), waterAmmount(waterAmmount), lcd(lcd) {}
 
-bool Schedule::update(DS1307* RTC) {
+void Schedule::setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount){
+    this->enabled=enabled;
+    this->intervalDays=intervalDays;
+    this->wtrTime=wtrTime;
+    this->waterAmmount=waterAmmount;
+}
+
+bool Schedule::update(TimeStruct currentTime) {
 
     // RTC.
 
     if( enabled && waterAmmount > 0 ){
-        if (false     ) {  //TODO warunek cały skonstruować
+        if (!wateredToday && currentTime.isLaterThan(wtrTime)) {  //TODO dodać zmiane wateredToday kiedyś
             lcd->clear();
             lcd->setCursor(0, 0);
             String message = String(" Irrigating [")+ String(pump->id) + String("]");
@@ -17,14 +24,12 @@ bool Schedule::update(DS1307* RTC) {
             lcd->print("  Please wait..");
     
             pump->setState(true);
-            delay(waterAmmount); // Podlewanie przez 5 sekund
+            delay(waterAmmount); 
             pump->setState(false);
-            lastWatered = millis();
+            wateredToday=true;
 
             return 1;
         }
-    }else{
-        lastWatered = millis();
     }
     return 0;
 }
@@ -62,8 +67,5 @@ void Schedule::setWtrTime(TimeStruct input){
 }
 
 void Schedule::setWtrTime(String input){
-
     wtrTime = TimeStruct( input.substring(0,2).toInt(), input.substring(2,4).toInt() );
-
-    //wtrTime = input;
 }

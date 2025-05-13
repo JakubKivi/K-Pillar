@@ -14,8 +14,9 @@ void Menu::update(char key) {
                 }
             }
         }else if(isSubmenu){
-            if(currentScreen == MANUAL){
-                if (key == '*') {  //idk to potem
+            if(currentScreen == SETTINGS){
+                if (key == '*') {  
+                    isEditing = true;
                     isSubmenu = false;
 
                 }else if (key == '#') {  // Zamknięcie submenu
@@ -41,7 +42,15 @@ void Menu::update(char key) {
             }
         }else{
             if (key == '*') { 
-                updateSchedule();
+                if(currentScreen==SETTINGS){
+                    while (inputBuffer.length()<4)
+                    {
+                        inputBuffer+="0";
+                    }
+                    setCurrentTime(TimeStruct(inputBuffer.substring(0,2).toInt(), inputBuffer.substring(2,4).toInt()), true);
+                }else{
+                    updateSchedule();
+                }
                 isSubmenu = true;
                 isEditing=false;
                 inputBuffer="";

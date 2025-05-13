@@ -25,11 +25,12 @@ byte rightArrow[8] = {
     B00000
 };
 
-Menu::Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[])
-    : lcd(lcd), keypad(keypad) {
+Menu::Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC)
+    : lcd(lcd), keypad(keypad), RTC(RTC) {
     for (int i = 0; i < 3; i++) {
         this->schedules[i] = schedules[i];
     }
+    //currentTime = TimeStruct( RTC->getHours(), RTC->getMinutes() );
 }
   
 String Menu::formatTime(TimeStruct time) {
@@ -97,9 +98,9 @@ MenuScreen Menu::getCurrentScreen() const{
 void Menu::lcdDrawMenu(){
     lcd->clear();
         switch (currentScreen) {
-            case 0:
-            case 1:
-            case 2:  //pumps
+            case PUMP1:
+            case PUMP2:
+            case PUMP3:  
                 lcd->setCursor(0, 0);
                 lcd->write(byte(0));
                 lcd->print("4   * Edit   6");
@@ -108,7 +109,7 @@ void Menu::lcdDrawMenu(){
                 lcd->print("     PUMP ");
                 lcd->print(currentScreen + 1);
                 break;
-            case 3:  //relay
+            case RELAY: 
                 lcd->setCursor(0, 0);
                 lcd->write(byte(0));
                 lcd->print("4   * Edit   6");
@@ -116,16 +117,16 @@ void Menu::lcdDrawMenu(){
                 lcd->setCursor(0, 1);
                 lcd->print("     RELAY");
                 break;
-            case 4:   //manual
+            case SETTINGS:  
                 lcd->setCursor(0, 0);
                 lcd->write(byte(0));
                 lcd->print("4  * Select  6");
                 lcd->write(byte(1));
                 lcd->setCursor(0, 1);
-                lcd->print("  Manual Mode");
+                lcd->print(centerText("Settings"));
                 break;
                 
-            case 5: //about
+            case ABOUT: //about
             lcd->setCursor(0, 0);
             lcd->write(byte(0));
             lcd->print("4 Created by 6");
@@ -153,5 +154,15 @@ void Menu::lcdCreateHomeScreen(){
     lcd->print(centerText("K-Pillar"));
     lcd->setCursor(0,1);
     lcd->print(centerText("by JakubKivi"));
-    delay(200);
+    delay(1000);
+}
+
+TimeStruct Menu::getCurrentTime(){
+    return currentTime;
+}
+
+void Menu::setCurrentTime(TimeStruct input, bool updateRTC){
+    if(updateRTC)
+        RTC->setTime(input.hour,input.minute,0);
+    currentTime = input;
 }

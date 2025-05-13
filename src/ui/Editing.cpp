@@ -10,34 +10,44 @@ String Menu::formatEditTime(String input){
 void Menu::lcdDrawEditing(){
     lcd->clear();
     lcd->setCursor(0, 0);
-    switch (currentSubScreen)
-    {
-    case ENABLE:
-        lcd->print(centerText("You shouldn't"));
-        lcd->setCursor(0, 1);
-        lcd->print(centerText("be here o.o"));
-    break;
-
-    case FREQ: //freq
-        lcd->print(centerText("Every"));
-        lcd->setCursor(0, 1);
-        lcd->print(centerText(  ( inputBuffer+" days").c_str()     )    );
-    break;
-
-    case TIMING: //ammount
+    if (currentScreen == SETTINGS){
+        lcd->setCursor(0, 0);
         lcd->print(centerText("Time"));
         lcd->setCursor(0, 1);
         lcd->print(centerText(  formatEditTime(inputBuffer).c_str()  )  );
-    break;
 
-    case AMMOUNT: //ammount
-        lcd->print(centerText("Duration"));
-        lcd->setCursor(0, 1);
-        lcd->print(centerText(  String(fillEmpty(inputBuffer) + "ms").c_str()  )  );
-    break;
-
-    
-    default:
+    }else{
+        switch (currentSubScreen)
+        {
+        case ENABLE:
+            lcd->print(centerText("You shouldn't"));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText("be here o.o"));
         break;
+
+        case FREQ: 
+            lcd->print(centerText("Every"));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(  ( inputBuffer+" days").c_str()     )    );
+        break;
+
+        case TIMING: 
+            lcd->print(centerText("Time"));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(  formatEditTime(inputBuffer).c_str()  )  );
+        break;
+
+        case AMMOUNT: 
+            lcd->print(centerText("Duration"));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(  String(fillEmpty(inputBuffer) + "ms").c_str()  )  );
+        break;
+
+        
+        default:
+            break;
+        }
     }
+    
+        
 }
