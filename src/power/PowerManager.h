@@ -19,7 +19,6 @@ public:
     void resetTimer();
     void goToSleep();
     void wakeUp();
-    static void wakeUpISR();
 };
 
 extern PowerManager powerManager;  // Globalny obiekt

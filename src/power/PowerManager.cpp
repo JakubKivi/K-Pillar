@@ -1,9 +1,26 @@
 #include "PowerManager.h"
+#include <avr/wdt.h>
+
+volatile uint8_t wakeUpCounter = 0;
+const uint8_t wakeUpThreshold = 1; // 23 * 8s ≈ 184s (~3 min)
 
 volatile bool wakeUpFlag = false;
 
+ISR(WDT_vect) {
+    wakeUpCounter++;
+    if (wakeUpCounter >= wakeUpThreshold) {
+        wakeUpFlag = true;
+    }
+}
+
 PowerManager::PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad, unsigned long noInteractionThreshhold)
-    : lcd(lcd), keypad(keypad), lastInteractionTime(0), noInteractionThreshhold(noInteractionThreshhold) {}
+    : lcd(lcd), keypad(keypad), lastInteractionTime(0), noInteractionThreshhold(noInteractionThreshhold) {
+        sleep_disable();
+        detachInterrupt(digitalPinToInterrupt(3));
+        MCUSR &= ~(1 << WDRF); // Clear watchdog reset flag
+        wdt_disable();         // Ensure watchdog is fully disabled at startup
+        
+    }
 
 void PowerManager::update() {    
     if (wakeUpFlag) {
@@ -25,6 +42,7 @@ void globalWakeUpISR() {
     wakeUpFlag = true;
 }
 
+
 void PowerManager::goToSleep() {
     lcd->noBacklight();
 
@@ -36,14 +54,28 @@ void PowerManager::goToSleep() {
     digitalWrite(8, LOW);
     digitalWrite(12, LOW);    
     
+    wakeUpCounter = 0;
+
+    // Int pin 3
     attachInterrupt(digitalPinToInterrupt(3), globalWakeUpISR, FALLING);
+
+    // Watchdog each 8s
+    MCUSR &= ~(1 << WDRF); // Clear WDRF
+    WDTCSR |= (1 << WDCE) | (1 << WDE); // WDT change enable
+    WDTCSR = (1 << WDIE) | (1 << WDP3) | (1 << WDP0); // Interrupt enable, timeout = 8s
 
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    sleep_cpu();
-    // -- tu MCU śpi, aż przyjdzie FALLING na pinie 3 --
+
+    while (!wakeUpFlag) {
+        sleep_cpu(); // śpij, aż przerwanie coś zrobi
+    }
+
     sleep_disable();
     detachInterrupt(digitalPinToInterrupt(3));
+
+    // Wyłącz watchdog po przebudzeniu
+    wdt_disable();
     
     pinMode(3, OUTPUT);    
     pinMode(7, INPUT_PULLUP);

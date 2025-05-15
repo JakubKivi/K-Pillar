@@ -6,24 +6,31 @@
 #include "hardware/Pump.h"
 #include "logic/TimeStruct.h"
 #include <I2C_RTC.h>
+#include "hardware/EepromControl.h"
 
 class Schedule {
 private:
+    static int globalIndexCounter; 
+    int index; 
+
     Pump* pump;
     
     bool enabled;
     unsigned int intervalDays;
     TimeStruct wtrTime;
-
     unsigned long waterAmmount;
 
-
+    EepromControl* EEPROM;
     LiquidCrystal_I2C* lcd;
+
+    void updateEEPROM();
+
 public:
+    bool wateredToday=0;
+
     void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount);
 
-    bool wateredToday=0;
-    Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, LiquidCrystal_I2C* lcd);
+    Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, EepromControl* EEPROM, LiquidCrystal_I2C* lcd);
     bool update(TimeStruct currentTime);
 
     unsigned long getAmmount();

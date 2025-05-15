@@ -12,7 +12,6 @@ void Menu::lcdDrawSubMenu(){
             lcd->print(centerText(formatTime(getCurrentTime()).c_str()));
     }else{   // PUMP1, PUMP2, PUMP3, RELAY
         String line;
-        Serial.println(currentSubScreen);
         switch (currentSubScreen)
         {
         case ENABLE: 

@@ -37,14 +37,14 @@ Pump pump2(A1, 2);
 Pump pump3(A2, 3);
 Relay relay(A3);
 
-Schedule schedule1(&pump1, 0, 1, TimeStruct(17, 00), 3000, &lcd);
-Schedule schedule2(&pump2, 0, 8, TimeStruct(17, 00), 2000, &lcd);
-Schedule schedule3(&pump3, 0, 9, TimeStruct(17, 00), 7000, &lcd);
+Schedule schedule1(&pump1, 0, 1, TimeStruct(17, 0), 3000, &EEPROM, &lcd);
+Schedule schedule2(&pump2, 0, 8, TimeStruct(17, 0), 2000, &EEPROM, &lcd);
+Schedule schedule3(&pump3, 0, 9, TimeStruct(17, 0), 7000, &EEPROM, &lcd);
 
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 Menu menu(&lcd, &keypad, schedules, &RTC);  
 
-PowerManager powerManager(&lcd, &keypad, 60000);
+PowerManager powerManager(&lcd, &keypad, 8000);
 
 
 
@@ -93,10 +93,10 @@ void loop() {
         
         menu.update(key);
     }
-    // Serial.println(RTC.getDateTimeString());
-    
+    //Serial.println(RTC.getDateTimeString());
 
-    //TODO dodać mijanie czasu takiego w menu
+
+    //menu.setCurrentTime(TimeStruct(RTC.getHours(),RTC.getMinutes()), false);
     
     if(schedule1.update(menu.getCurrentTime()) or schedule2.update(menu.getCurrentTime()) or schedule3.update(menu.getCurrentTime())) 
         menu.displayScreen();   
