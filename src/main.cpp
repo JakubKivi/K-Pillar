@@ -32,9 +32,9 @@ byte colPins[COLS] = {7, 8, 12};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-Pump pump1(A0, 1);
-Pump pump2(A1, 2);
-Pump pump3(A2, 3);
+Pump pump1(11, 1);
+Pump pump2(10, 2);
+Pump pump3(9, 3);
 Relay relay(A3);
 
 Schedule schedule1(&pump1, 0, 1, TimeStruct(17, 0), 3000, &EEPROM, &lcd);
@@ -44,7 +44,7 @@ Schedule schedule3(&pump3, 0, 9, TimeStruct(17, 0), 7000, &EEPROM, &lcd);
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 Menu menu(&lcd, &keypad, schedules, &RTC);  
 
-PowerManager powerManager(&lcd, &keypad, 8000);
+PowerManager powerManager(&lcd, &keypad, 30000);
 
 
 
@@ -74,29 +74,34 @@ void setup() {
     menu.setCurrentTime(TimeStruct(RTC.getHours(),RTC.getMinutes()), false);
 
 	//RTC.setDate(13,05,25);
-	// RTC.setTime(17,27,20);
+	//RTC.setTime(17,27,20);
+
     if(RTC.isConnected() == false)
 	{
 		Serial.println("RTC Not Connected!");
+    }else{
+        if (!RTC.isRunning())
+        {
+            RTC.startClock();
+        }
+        
     }
 }
 
 
 
 void loop() {
-    // delay(INT32_MAX);
     powerManager.update();
     char key = keypad.getKey();
     if (key) {
         // Serial.println(key);
-        powerManager.resetTimer();  // Reset licznika usypiania
-        
+        powerManager.resetTimer();  
         menu.update(key);
     }
+
     //Serial.println(RTC.getDateTimeString());
 
-
-    //menu.setCurrentTime(TimeStruct(RTC.getHours(),RTC.getMinutes()), false);
+    menu.setCurrentTime(TimeStruct(RTC.getHours(),RTC.getMinutes()), false);
     
     if(schedule1.update(menu.getCurrentTime()) or schedule2.update(menu.getCurrentTime()) or schedule3.update(menu.getCurrentTime())) 
         menu.displayScreen();   

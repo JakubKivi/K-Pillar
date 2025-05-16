@@ -164,5 +164,6 @@ TimeStruct Menu::getCurrentTime(){
 void Menu::setCurrentTime(TimeStruct input, bool updateRTC){
     if(updateRTC)
         RTC->setTime(input.hour,input.minute,0);
+        RTC->startClock();
     currentTime = input;
 }

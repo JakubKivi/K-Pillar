@@ -15,13 +15,18 @@ void Menu::update(char key) {
             }
         }else if(isSubmenu){
             if(currentScreen == SETTINGS){
-                if (key == '*') {  
+                if (key == '4') {  // Lewo
+                    currentMenuSettingsScreen = (currentMenuSettingsScreen == TIME) ? SLEEPING : (MenuSettingsScreen)(currentMenuSettingsScreen - 1);
+                } else if (key == '6') {  // Prawo
+                    currentMenuSettingsScreen = (currentMenuSettingsScreen == SLEEPING) ? TIME : (MenuSettingsScreen)(currentMenuSettingsScreen + 1);
+                }else if (key == '*') {  
                     isEditing = true;
                     isSubmenu = false;
 
                 }else if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
                 }
+
             }else{
                 
                 if (key == '4') {  // Lewo

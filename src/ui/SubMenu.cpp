@@ -5,11 +5,28 @@ void Menu::lcdDrawSubMenu(){
     lcd->clear();
     lcd->setCursor(0, 0);
     if(currentScreen == SETTINGS){
+        switch (currentMenuSettingsScreen)
+        {
+        case TIME:
             lcd->write(byte(0));
             lcd->print("4    Time    6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
             lcd->print(centerText(formatTime(getCurrentTime()).c_str()));
+            break;
+
+        case SLEEPING:
+            lcd->write(byte(0));
+            lcd->print("4 Sleep Time 6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            lcd->print("dupsko tak o");
+            break;
+        
+        default:
+            break;
+        }
+            
     }else{   // PUMP1, PUMP2, PUMP3, RELAY
         String line;
         switch (currentSubScreen)

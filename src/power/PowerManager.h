@@ -15,6 +15,8 @@ private:
     
 public:
     PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad,unsigned long noInteractionThreshhold);
+
+    
     void update();
     void resetTimer();
     void goToSleep();

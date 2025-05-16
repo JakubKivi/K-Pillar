@@ -12,7 +12,7 @@
 enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS, ABOUT };
 enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT };
 
-enum MenuSettings {TIME};
+enum MenuSettingsScreen {TIME, SLEEPING};
 
 class Menu {
 private:
@@ -23,6 +23,7 @@ private:
 
     MenuScreen currentScreen = PUMP1;
     MenuSubScreen currentSubScreen = ENABLE;    
+    MenuSettingsScreen currentMenuSettingsScreen = TIME;
 
     TimeStruct currentTime;
 
