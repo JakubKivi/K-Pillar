@@ -44,15 +44,12 @@ Schedule schedule3(&pump3, 0, 9, TimeStruct(17, 0), 7000, &EEPROM, &lcd);
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 Menu menu(&lcd, &keypad, schedules, &RTC);  
 
-PowerManager powerManager(&lcd, &keypad, 30000);
+PowerManager powerManager(&lcd, &keypad, 10000);
 
 
 
 void setup() {
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     EEPROM.writeSchedule(i, schedules[i]->getEnabled() , schedules[i]->getInterval(), schedules[i]->getWtrTime(), schedules[i]->getAmmount());
-    // }
+
     bool enabled[NUM_SCHEDULES];
     unsigned int intervalDays[NUM_SCHEDULES];
     TimeStruct times[NUM_SCHEDULES];
@@ -61,9 +58,8 @@ void setup() {
     EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount);
     for (int i = 0; i < 2; i++){
         schedules[i]->setValues(enabled[i],intervalDays[i],times[i],waterAmmount[i]);
-    }
+    }                                                                                           //LOADING DATA FROM EEPROM
 
-    
     Serial.begin(9600);
     lcd.init();
     powerManager.wakeUp();
@@ -71,11 +67,7 @@ void setup() {
     menu.lcdCreateHomeScreen();
     menu.displayScreen();
 
-    menu.setCurrentTime(TimeStruct(RTC.getHours(),RTC.getMinutes()), false);
-
-	//RTC.setDate(13,05,25);
-	//RTC.setTime(17,27,20);
-
+    RTC.begin();
     if(RTC.isConnected() == false)
 	{
 		Serial.println("RTC Not Connected!");
@@ -86,26 +78,50 @@ void setup() {
         }
         
     }
+    tm read = RTC.getDateTime();
+    menu.setCurrentTime(TimeStruct(read.tm_hour ,read.tm_min), false);
+    // RTC.setWeek(3);
+	// RTC.setDate(20,05,25);
+	// RTC.setTime(19,29,0);
 }
 
-
+unsigned int counter =0;
+int counter2=0;
 
 void loop() {
     powerManager.update();
     char key = keypad.getKey();
-    if (key) {
-        // Serial.println(key);
-        powerManager.resetTimer();  
-        menu.update(key);
+
+    if (key)
+    {
+        powerManager.resetTimer(); 
+
+        if (powerManager.isSilentWakeUp){
+            powerManager.isSilentWakeUp=false;
+            lcd.backlight();
+        }else{
+            menu.update(key);
+        }
+    }
+        
+    counter++;
+    if (counter>100)  //~10 sec
+    {
+        counter=0;
+        Serial.println(RTC.getDateTimeString());
+        tm read = RTC.getDateTime();
+        menu.setCurrentTime(TimeStruct(read.tm_hour ,read.tm_min), false);
+    }
+    counter2++;
+    if(counter2>10){
+        Serial.println("Schedule: "+String(schedule1.getWtrTime().hour)+":"+schedule1.getWtrTime().minute);
+        Serial.println("Current: "+String(menu.getCurrentTime().hour)+":"+menu.getCurrentTime().minute);
+        counter2=0;
     }
 
-    //Serial.println(RTC.getDateTimeString());
-
-    menu.setCurrentTime(TimeStruct(RTC.getHours(),RTC.getMinutes()), false);
     
     if(schedule1.update(menu.getCurrentTime()) or schedule2.update(menu.getCurrentTime()) or schedule3.update(menu.getCurrentTime())) 
         menu.displayScreen();   
 
     delay(100);
-    
 }

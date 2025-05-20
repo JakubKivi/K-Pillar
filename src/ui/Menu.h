@@ -9,10 +9,10 @@
 #include "logic/TimeStruct.h"
 #include "logic/TimeStruct.h"
 
-enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS, ABOUT };
+enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS};
 enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT };
 
-enum MenuSettingsScreen {TIME, SLEEPING};
+enum MenuSettingsScreen {TIME, SLEEPING, ABOUT};
 
 class Menu {
 private:

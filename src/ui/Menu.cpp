@@ -125,15 +125,6 @@ void Menu::lcdDrawMenu(){
                 lcd->setCursor(0, 1);
                 lcd->print(centerText("Settings"));
                 break;
-                
-            case ABOUT: //about
-            lcd->setCursor(0, 0);
-            lcd->write(byte(0));
-            lcd->print("4 Created by 6");
-            lcd->write(byte(1));
-            lcd->setCursor(0, 1);
-            lcd->print("   JakubKivi");
-            break;
         }
 }
 

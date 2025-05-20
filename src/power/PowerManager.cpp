@@ -5,11 +5,13 @@ volatile uint8_t wakeUpCounter = 0;
 const uint8_t wakeUpThreshold = 1; // 23 * 8s ≈ 184s (~3 min)
 
 volatile bool wakeUpFlag = false;
+volatile bool silentWakeUpFlag = false;
 
 ISR(WDT_vect) {
     wakeUpCounter++;
     if (wakeUpCounter >= wakeUpThreshold) {
         wakeUpFlag = true;
+        silentWakeUpFlag = true;
     }
 }
 
@@ -19,8 +21,7 @@ PowerManager::PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad, unsigned long
         detachInterrupt(digitalPinToInterrupt(3));
         MCUSR &= ~(1 << WDRF); // Clear watchdog reset flag
         wdt_disable();         // Ensure watchdog is fully disabled at startup
-        
-    }
+}
 
 void PowerManager::update() {    
     if (wakeUpFlag) {
@@ -39,11 +40,15 @@ void PowerManager::resetTimer() {
 }
 
 void globalWakeUpISR() {
+    silentWakeUpFlag = false;
     wakeUpFlag = true;
 }
 
 
 void PowerManager::goToSleep() {
+    Serial.println("Ide w spanko");
+    delay(100);
+
     lcd->noBacklight();
 
     pinMode(3, INPUT_PULLUP);    
@@ -55,6 +60,7 @@ void PowerManager::goToSleep() {
     digitalWrite(12, LOW);    
     
     wakeUpCounter = 0;
+    isSilentWakeUp = false;
 
     // Int pin 3
     attachInterrupt(digitalPinToInterrupt(3), globalWakeUpISR, FALLING);
@@ -84,7 +90,15 @@ void PowerManager::goToSleep() {
 }
 
 void PowerManager::wakeUp() {
-    lcd->backlight();
+    if (silentWakeUpFlag)
+    {
+        isSilentWakeUp=true;
+        Serial.println("Cicha pobudka");
+    }else{
+        isSilentWakeUp=false;
+        lcd->backlight();
+    }
+    
     lastInteractionTime = millis();
 }
 

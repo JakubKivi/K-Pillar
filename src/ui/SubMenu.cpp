@@ -22,12 +22,27 @@ void Menu::lcdDrawSubMenu(){
             lcd->setCursor(0, 1);
             lcd->print("dupsko tak o");
             break;
-        
+
+        case ABOUT:
+            lcd->setCursor(0, 0);
+            lcd->write(byte(0));
+            lcd->print("4 Created by 6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            lcd->print("   JakubKivi");
+            break;
+
         default:
             break;
         }
             
-    }else{   // PUMP1, PUMP2, PUMP3, RELAY
+    }else if(currentScreen == RELAY){
+        lcd->setCursor(0, 0);
+        lcd->print(centerText("TODO"));
+        lcd->setCursor(0, 1);
+        lcd->print(centerText("# to exit"));
+
+    }else{   // PUMP 1 - 3
         String line;
         switch (currentSubScreen)
         {

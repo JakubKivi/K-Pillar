@@ -16,7 +16,12 @@ TimeStruct::TimeStruct(uint8_t h, uint8_t m){
 }
 
 bool TimeStruct::isLaterThan(const TimeStruct& other) const {
+
     if (hour > other.hour) return true;
-    if (hour < other.hour) return false;
-    return minute > other.minute;
+
+    if (hour == other.hour){
+        if (minute > other.minute) return true;
+    }
+
+    return false;
 }

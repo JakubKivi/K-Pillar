@@ -17,10 +17,8 @@ void Schedule::setValues(bool enabled, unsigned int intervalDays, TimeStruct wtr
 
 bool Schedule::update(TimeStruct currentTime) {
 
-    // RTC.
-
     if( enabled && waterAmmount > 0 ){
-        if (!wateredToday && currentTime.isLaterThan(wtrTime)) {  //TODO dodać zmiane wateredToday kiedyś
+        if (!wateredToday && currentTime.isLaterThan(wtrTime)) {  //TODO dodać daty
             lcd->clear();
             lcd->setCursor(0, 0);
             String message = String(" Irrigating [")+ String(pump->id) + String("]");
@@ -68,6 +66,7 @@ bool Schedule::getEnabled(){
 
 void Schedule::setEnabled(bool input){
     enabled = input;
+    wateredToday = false;
     updateEEPROM();
 }
 

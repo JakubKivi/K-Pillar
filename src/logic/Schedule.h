@@ -26,7 +26,7 @@ private:
     void updateEEPROM();
 
 public:
-    bool wateredToday=0;
+    bool wateredToday=0;  //TEMP
 
     void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount);
 

@@ -14,8 +14,9 @@ private:
     unsigned long noInteractionThreshhold;
     
 public:
+    bool isSilentWakeUp = false;
+    
     PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad,unsigned long noInteractionThreshhold);
-
     
     void update();
     void resetTimer();

@@ -3,30 +3,33 @@
 
 void Menu::update(char key) {
     if (key) {
-        if(!isSubmenu && !isEditing){
+        if(!isSubmenu && !isEditing){           //MAIN MENU
             if (key == '4') {  // Lewo
-                currentScreen = (currentScreen == PUMP1) ? ABOUT : (MenuScreen)(currentScreen - 1);
+                currentScreen = (currentScreen == PUMP1) ? SETTINGS : (MenuScreen)(currentScreen - 1);
             } else if (key == '6') {  // Prawo
-                currentScreen = (currentScreen == ABOUT) ? PUMP1 : (MenuScreen)(currentScreen + 1);
-            } else if (key == '*') {  // Otwarcie submenu
-                if (currentScreen != ABOUT) {
-                    isSubmenu = true;
-                }
+                currentScreen = (currentScreen == SETTINGS) ? PUMP1 : (MenuScreen)(currentScreen + 1);
+            } else if (key == '*') {  
+                isSubmenu = true;
             }
         }else if(isSubmenu){
             if(currentScreen == SETTINGS){
                 if (key == '4') {  // Lewo
-                    currentMenuSettingsScreen = (currentMenuSettingsScreen == TIME) ? SLEEPING : (MenuSettingsScreen)(currentMenuSettingsScreen - 1);
+                    currentMenuSettingsScreen = (currentMenuSettingsScreen == TIME) ? ABOUT : (MenuSettingsScreen)(currentMenuSettingsScreen - 1);
                 } else if (key == '6') {  // Prawo
-                    currentMenuSettingsScreen = (currentMenuSettingsScreen == SLEEPING) ? TIME : (MenuSettingsScreen)(currentMenuSettingsScreen + 1);
+                    currentMenuSettingsScreen = (currentMenuSettingsScreen == ABOUT) ? TIME : (MenuSettingsScreen)(currentMenuSettingsScreen + 1);
                 }else if (key == '*') {  
                     isEditing = true;
                     isSubmenu = false;
 
                 }else if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
+                    currentMenuSettingsScreen = TIME;
                 }
 
+            }else if(currentScreen == RELAY){
+                if (key == '#') {  // Zamknięcie submenu
+                    isSubmenu = false;
+                } 
             }else{
                 
                 if (key == '4') {  // Lewo
@@ -35,6 +38,7 @@ void Menu::update(char key) {
                     currentSubScreen = (currentSubScreen == AMMOUNT) ? ENABLE : (MenuSubScreen)(currentSubScreen + 1);
                 }else if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
+                    currentSubScreen = ENABLE;
                 } else if (key == '*') {  // Otwarcie edycji
                     if (currentSubScreen != ENABLE) {
                         isEditing = true;
