@@ -10,7 +10,7 @@
 #include "logic/TimeStruct.h"
 
 enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS};
-enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT };
+enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT, NEXT };
 
 enum MenuSettingsScreen {TIME, SLEEPING, ABOUT};
 

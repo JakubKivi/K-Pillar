@@ -1,0 +1,47 @@
+#include "DateStruct.h"
+#include <stdlib.h>
+
+DateStruct::DateStruct()
+    : day(1), month(1), year(2000) {}
+
+DateStruct::DateStruct(uint8_t d, uint8_t m, uint16_t y)
+    : day(d), month(m), year(y) {}
+
+bool DateStruct::isLeapYear(uint16_t y) const {
+    return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+}
+
+int DateStruct::daysInYear(uint16_t y) const {
+    return isLeapYear(y) ? 366 : 365;
+}
+
+int DateStruct::dayOfYear() const {
+    static const uint16_t daysBeforeMonth[12] = {
+        0,   31,  59,  90, 120, 151,
+        181, 212, 243, 273, 304, 334
+    };
+
+    if (month < 1 || month > 12 || day < 1 || day > 31)
+        return -1;
+
+    int dayNum = daysBeforeMonth[month - 1] + day;
+
+    if (isLeapYear(year) && month > 2)
+        dayNum += 1;
+
+    return dayNum;
+}
+
+// Liczba dni od 01.01.0000 do tej daty
+long DateStruct::daysSinceEpoch() const {
+    long days = 0;
+    for (uint16_t y = 0; y < year; ++y) {
+        days += daysInYear(y);
+    }
+    days += dayOfYear();
+    return days;
+}
+
+int DateStruct::diffDays(const DateStruct& other) const {
+    return (int)(this->daysSinceEpoch() - other.daysSinceEpoch());
+}

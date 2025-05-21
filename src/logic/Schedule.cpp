@@ -7,11 +7,13 @@ int Schedule::globalIndexCounter = 0;
 Schedule::Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, EepromControl* EEPROM,  LiquidCrystal_I2C* lcd)
     : pump(pump), enabled(enabled), intervalDays(intervalDays), wtrTime(wtrTime), waterAmmount(waterAmmount), EEPROM(EEPROM), lcd(lcd) {}
 
-void Schedule::setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount){
+void Schedule::setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, bool wateredToday, DateStruct nextWatering){
     this->enabled=enabled;
     this->intervalDays=intervalDays;
     this->wtrTime=wtrTime;
     this->waterAmmount=waterAmmount;
+    this->wateredToday=wateredToday;
+    this->nextWatering=nextWatering;
     index = globalIndexCounter++;
 }
 

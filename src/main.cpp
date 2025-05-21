@@ -10,6 +10,7 @@
 #include <Wire.h>
 #include <I2C_RTC.h>
 #include "hardware/EepromControl.h"
+#include "logic/DateStruct.h"
 
 #define NUM_SCHEDULES 3
 
@@ -47,17 +48,18 @@ Menu menu(&lcd, &keypad, schedules, &RTC);
 PowerManager powerManager(&lcd, &keypad, 10000);
 
 
-
 void setup() {
 
     bool enabled[NUM_SCHEDULES];
     unsigned int intervalDays[NUM_SCHEDULES];
     TimeStruct times[NUM_SCHEDULES];
     unsigned long waterAmmount[NUM_SCHEDULES];
+    bool wateredToday[NUM_SCHEDULES];
+    DateStruct nextWatering[NUM_SCHEDULES];
 
-    EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount);
+    EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount, wateredToday, nextWatering);
     for (int i = 0; i < 2; i++){
-        schedules[i]->setValues(enabled[i],intervalDays[i],times[i],waterAmmount[i]);
+        schedules[i]->setValues(enabled[i],intervalDays[i],times[i],waterAmmount[i],wateredToday[i], nextWatering[i]);
     }                                                                                           //LOADING DATA FROM EEPROM
 
     Serial.begin(9600);
@@ -86,7 +88,6 @@ void setup() {
 }
 
 unsigned int counter =0;
-int counter2=0;
 
 void loop() {
     powerManager.update();
@@ -112,14 +113,7 @@ void loop() {
         tm read = RTC.getDateTime();
         menu.setCurrentTime(TimeStruct(read.tm_hour ,read.tm_min), false);
     }
-    counter2++;
-    if(counter2>10){
-        Serial.println("Schedule: "+String(schedule1.getWtrTime().hour)+":"+schedule1.getWtrTime().minute);
-        Serial.println("Current: "+String(menu.getCurrentTime().hour)+":"+menu.getCurrentTime().minute);
-        counter2=0;
-    }
-
-    
+        
     if(schedule1.update(menu.getCurrentTime()) or schedule2.update(menu.getCurrentTime()) or schedule3.update(menu.getCurrentTime())) 
         menu.displayScreen();   
 

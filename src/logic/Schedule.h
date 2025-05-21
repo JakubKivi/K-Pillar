@@ -7,6 +7,7 @@
 #include "logic/TimeStruct.h"
 #include <I2C_RTC.h>
 #include "hardware/EepromControl.h"
+#include "logic/DateStruct.h"
 
 class Schedule {
 private:
@@ -19,6 +20,9 @@ private:
     unsigned int intervalDays;
     TimeStruct wtrTime;
     unsigned long waterAmmount;
+    
+    bool wateredToday = 0;  
+    DateStruct nextWatering;
 
     EepromControl* EEPROM;
     LiquidCrystal_I2C* lcd;
@@ -26,9 +30,8 @@ private:
     void updateEEPROM();
 
 public:
-    bool wateredToday=0;  //TEMP
 
-    void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount);
+    void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, bool wateredToday, DateStruct nextWatering);
 
     Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, EepromControl* EEPROM, LiquidCrystal_I2C* lcd);
     bool update(TimeStruct currentTime);
