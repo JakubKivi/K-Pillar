@@ -22,6 +22,7 @@ private:
     Schedule* schedules[3];
     DS1307* RTC;
     PowerManager* powerManager;
+    EepromControl* EEPROM;
 
     MenuScreen currentScreen = PUMP1;
     MenuSubScreen currentSubScreen = ENABLE;    
@@ -48,7 +49,7 @@ private:
     String fillEmpty(String input);
 
 public:
-    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager);
+    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager, EepromControl* EEPROM);
     void update(char key);
     void displayScreen();
     MenuScreen getCurrentScreen() const;

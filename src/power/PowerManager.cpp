@@ -2,7 +2,7 @@
 #include <avr/wdt.h>
 
 volatile uint8_t wakeUpCounter = 0;
-const uint8_t wakeUpThreshold = 1; // 23 * 8s ≈ 184s (~3 min)
+const uint8_t wakeUpThreshold = 4; // 23 * 8s ≈ 184s (~3 min)
 
 volatile bool wakeUpFlag = false;
 volatile bool silentWakeUpFlag = false;
@@ -25,6 +25,11 @@ PowerManager::PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad, unsigned long
 
 unsigned long PowerManager::getNoInteractionThreshhold(){
     return noInteractionThreshhold;
+}
+
+
+void PowerManager::setNoInteractionThreshhold(unsigned long input){
+    noInteractionThreshhold = input;
 }
 
 void PowerManager::update() {    

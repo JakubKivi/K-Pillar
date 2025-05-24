@@ -4,8 +4,31 @@
 DateStruct::DateStruct()
     : day(1), month(1), year(2000) {}
 
-DateStruct::DateStruct(uint8_t d, uint8_t m, uint16_t y)
-    : day(d), month(m), year(y) {}
+DateStruct::DateStruct(uint8_t d, uint8_t m, uint16_t y){
+    if (y < 1900) y = 1900;
+    else if (y > 2100) y = 2100;
+    year = y;
+
+    // Clamp month to [1, 12]
+    if (m < 1) m = 1;
+    else if (m > 12) m = 12;
+    month = m;
+
+    // Determine max day in given month/year
+    static const uint8_t daysInMonth[12] = {
+        31, 28, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31
+    };
+
+    uint8_t maxDay = daysInMonth[month - 1];
+    if (month == 2 && isLeapYear(year))
+        maxDay = 29;
+
+    // Clamp day to [1, maxDay]
+    if (d < 1) d = 1;
+    else if (d > maxDay) d = maxDay;
+    day = d;
+}
 
 bool DateStruct::isLeapYear(uint16_t y) const {
     return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);

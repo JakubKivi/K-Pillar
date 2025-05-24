@@ -45,6 +45,9 @@ public:
     void setWtrTime(TimeStruct input);
     void setWtrTime(String input);
 
+    DateStruct getNextWatering();
+    void setNextWatering(DateStruct nextWatering);
+    
     bool getEnabled();
     void setEnabled(bool input);
 };

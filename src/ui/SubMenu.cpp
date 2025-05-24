@@ -5,7 +5,7 @@ void Menu::lcdDrawSubMenu(){
     lcd->clear();
     lcd->setCursor(0, 0);
     if(currentScreen == SETTINGS){
-        String dateText;
+        String text;
         switch (currentMenuSettingsScreen)
         {
         case TIME:
@@ -21,8 +21,8 @@ void Menu::lcdDrawSubMenu(){
             lcd->print("4    Date    6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-            dateText = String(currentDate.day)+"."+String(currentDate.month)+"."+String(1900+currentDate.year)+"r";
-            lcd->print(centerText( dateText.c_str() )); 
+            text = String(currentDate.day)+"."+String(currentDate.month)+"."+String(currentDate.year)+"r";
+            lcd->print(centerText( text.c_str() )); 
             break;
 
         case SLEEPING:
@@ -30,7 +30,8 @@ void Menu::lcdDrawSubMenu(){
             lcd->print("4 Sleep Time 6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-            lcd->print(centerText(String(powerManager->getNoInteractionThreshhold()).c_str()));
+            text = String(powerManager->getNoInteractionThreshhold());
+            lcd->print(centerText( String(text.substring(0, text.length()-3)+" [s]").c_str() ));
             break;
 
         case ABOUT:
@@ -96,6 +97,16 @@ void Menu::lcdDrawSubMenu(){
             lcd->setCursor(0, 1);
         
             lcd->print(centerText( formatAmount(schedules[currentScreen]->getAmmount()).c_str()));
+        break;
+
+        case NEXT: //next
+            lcd->write(byte(0));
+            lcd->print("4    Next    6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            DateStruct date = schedules[currentScreen]->getNextWatering();
+            line = String(date.day)+"."+String(date.month)+"."+String(date.year)+"r.";
+            lcd->print(centerText( line.c_str()));
         break;
 
         default:

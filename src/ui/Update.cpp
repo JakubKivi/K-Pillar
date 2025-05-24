@@ -18,8 +18,12 @@ void Menu::update(char key) {
                 } else if (key == '6') {  // Prawo
                     currentMenuSettingsScreen = (currentMenuSettingsScreen == ABOUT) ? TIME : (MenuSettingsScreen)(currentMenuSettingsScreen + 1);
                 }else if (key == '*') {  
-                    isEditing = true;
-                    isSubmenu = false;
+                    if (currentMenuSettingsScreen != ABOUT)
+                    {
+                        isEditing = true;
+                        isSubmenu = false;
+                    }                  
+                    
 
                 }else if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
@@ -33,9 +37,9 @@ void Menu::update(char key) {
             }else{
                 
                 if (key == '4') {  // Lewo
-                    currentSubScreen = (currentSubScreen == ENABLE) ? AMMOUNT : (MenuSubScreen)(currentSubScreen - 1);
+                    currentSubScreen = (currentSubScreen == ENABLE) ? NEXT : (MenuSubScreen)(currentSubScreen - 1);
                 } else if (key == '6') {  // Prawo
-                    currentSubScreen = (currentSubScreen == AMMOUNT) ? ENABLE : (MenuSubScreen)(currentSubScreen + 1);
+                    currentSubScreen = (currentSubScreen == NEXT) ? ENABLE : (MenuSubScreen)(currentSubScreen + 1);
                 }else if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
                     currentSubScreen = ENABLE;
@@ -49,14 +53,37 @@ void Menu::update(char key) {
                     }
                 }
             }
-        }else{
+        }else{  //editing
             if (key == '*') { 
                 if(currentScreen==SETTINGS){
-                    while (inputBuffer.length()<4)
+                    switch (currentMenuSettingsScreen)
                     {
-                        inputBuffer+="0";
+                    case TIME:
+                        while (inputBuffer.length()<4)
+                        {
+                            inputBuffer+="0";
+                        }
+                        setCurrentTime(TimeStruct(inputBuffer.substring(0,2).toInt(), inputBuffer.substring(2,4).toInt()), true);
+                    break;
+
+                    case DATE:
+                        while (inputBuffer.length()<8)
+                        {
+                            inputBuffer+="0";
+                        }
+
+                        setCurrentDate(DateStruct(inputBuffer.substring(0,2).toInt(), inputBuffer.substring(2,4).toInt(), inputBuffer.substring(4,8).toInt()),true);
+
+                    break;
+                    case SLEEPING:
+                        powerManager->setNoInteractionThreshhold(inputBuffer.toInt()*1000);
+                        EEPROM->saveSettings(inputBuffer.toInt()*1000);
+                    break;
+                    
+                    default:
+                        break;
                     }
-                    setCurrentTime(TimeStruct(inputBuffer.substring(0,2).toInt(), inputBuffer.substring(2,4).toInt()), true);
+                    
                 }else{
                     updateSchedule();
                 }
@@ -70,7 +97,7 @@ void Menu::update(char key) {
                 }else{
                     inputBuffer="";
                 }
-            }else if(key >= '0' && key <= '9' && inputBuffer.length() < 6){
+            }else if(key >= '0' && key <= '9' && inputBuffer.length() < 8){
                 inputBuffer += key;
             }
         }
@@ -83,7 +110,8 @@ void Menu::updateSchedule(){
     {
     case FREQ:
         schedules[currentScreen]->setInterval(inputBuffer);
-        break;
+    break;
+
     case TIMING:
         while (inputBuffer.length()<4)
         {
@@ -91,10 +119,20 @@ void Menu::updateSchedule(){
         }
         
         schedules[currentScreen]->setWtrTime(inputBuffer);
-        break;
+    break;
+
     case AMMOUNT:
         schedules[currentScreen]->setAmmount(inputBuffer);
-        break;
+    break;
+
+    case NEXT:
+        while (inputBuffer.length()<8)
+        {
+            inputBuffer+="0";
+        }
+        schedules[currentScreen]->setNextWatering(DateStruct(inputBuffer.substring(0,2).toInt(), inputBuffer.substring(2,4).toInt(), inputBuffer.substring(4,8).toInt()));
+    break;
+
     default:
         break;
     }

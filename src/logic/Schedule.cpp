@@ -32,8 +32,9 @@ bool Schedule::update(TimeStruct currentTime, DateStruct currentDate) {
             pump->setState(true);
             delay(waterAmmount); 
             pump->setState(false);
-
-            nextWatering += intervalDays;
+            nextWatering = DateStruct(25,5,2025);
+            
+            //nextWatering += intervalDays;
 
             return 1;
         }
@@ -61,6 +62,16 @@ unsigned long Schedule::getInterval() {
 
 void Schedule::setInterval(String newInterval) {
     intervalDays = newInterval.toInt();
+    updateEEPROM();
+}
+
+
+DateStruct Schedule::getNextWatering(){
+    return nextWatering;
+}
+
+void Schedule::setNextWatering(DateStruct nextWatering){
+    this->nextWatering = nextWatering; 
     updateEEPROM();
 }
 
