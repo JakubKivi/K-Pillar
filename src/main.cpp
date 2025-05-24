@@ -43,9 +43,8 @@ Schedule schedule2(&pump2, 0, 8, TimeStruct(17, 0), 2000, &EEPROM, &lcd);
 Schedule schedule3(&pump3, 0, 9, TimeStruct(17, 0), 7000, &EEPROM, &lcd);
 
 Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
-Menu menu(&lcd, &keypad, schedules, &RTC);  
-
-PowerManager powerManager(&lcd, &keypad, 10000);
+PowerManager powerManager(&lcd, &keypad, 15000);
+Menu menu(&lcd, &keypad, schedules, &RTC, &powerManager);  
 
 
 void setup() {
@@ -54,12 +53,11 @@ void setup() {
     unsigned int intervalDays[NUM_SCHEDULES];
     TimeStruct times[NUM_SCHEDULES];
     unsigned long waterAmmount[NUM_SCHEDULES];
-    bool wateredToday[NUM_SCHEDULES];
     DateStruct nextWatering[NUM_SCHEDULES];
 
-    EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount, wateredToday, nextWatering);
+    EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount, nextWatering);
     for (int i = 0; i < 2; i++){
-        schedules[i]->setValues(enabled[i],intervalDays[i],times[i],waterAmmount[i],wateredToday[i], nextWatering[i]);
+        schedules[i]->setValues(enabled[i],intervalDays[i],times[i],waterAmmount[i], nextWatering[i]);
     }                                                                                           //LOADING DATA FROM EEPROM
 
     Serial.begin(9600);
@@ -82,6 +80,7 @@ void setup() {
     }
     tm read = RTC.getDateTime();
     menu.setCurrentTime(TimeStruct(read.tm_hour ,read.tm_min), false);
+    menu.setCurrentDate(DateStruct(read.tm_mday, read.tm_mon, read.tm_year),false);
     // RTC.setWeek(3);
 	// RTC.setDate(20,05,25);
 	// RTC.setTime(19,29,0);
@@ -112,9 +111,12 @@ void loop() {
         Serial.println(RTC.getDateTimeString());
         tm read = RTC.getDateTime();
         menu.setCurrentTime(TimeStruct(read.tm_hour ,read.tm_min), false);
+        menu.setCurrentDate(DateStruct(read.tm_mday, read.tm_mon, read.tm_year),false);
     }
         
-    if(schedule1.update(menu.getCurrentTime()) or schedule2.update(menu.getCurrentTime()) or schedule3.update(menu.getCurrentTime())) 
+    TimeStruct time = menu.getCurrentTime();
+    DateStruct date = menu.getCurrentDate();
+    if(schedule1.update(time, date) or schedule2.update(time, date) or schedule3.update(time, date)) 
         menu.displayScreen();   
 
     delay(100);

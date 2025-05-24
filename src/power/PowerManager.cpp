@@ -23,6 +23,10 @@ PowerManager::PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad, unsigned long
         wdt_disable();         // Ensure watchdog is fully disabled at startup
 }
 
+unsigned long PowerManager::getNoInteractionThreshhold(){
+    return noInteractionThreshhold;
+}
+
 void PowerManager::update() {    
     if (wakeUpFlag) {
         wakeUp();

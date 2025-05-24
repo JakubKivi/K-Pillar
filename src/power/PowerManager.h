@@ -18,6 +18,9 @@ public:
     
     PowerManager(LiquidCrystal_I2C* lcd, Keypad* keypad,unsigned long noInteractionThreshhold);
     
+    unsigned long getNoInteractionThreshhold();
+    void setNoInteractionThreshhold(, bool updateEEPROM);
+
     void update();
     void resetTimer();
     void goToSleep();

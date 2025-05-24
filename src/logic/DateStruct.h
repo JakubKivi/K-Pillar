@@ -12,8 +12,10 @@ public:
     DateStruct();
     DateStruct(uint8_t d, uint8_t m, uint16_t y);
 
-    // Różnica dni między this a other (może zwrócić ujemną wartość)
+    // Ujemna jeśli other jest później
     int diffDays(const DateStruct& other) const;
+    void addDays(int daysToAdd);
+    DateStruct& operator+=(int daysToAdd);
 
 private:
     bool isLeapYear(uint16_t y) const;

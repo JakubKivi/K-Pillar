@@ -7,12 +7,13 @@
 #include "logic/Schedule.h"
 #include "power/PowerManager.h"
 #include "logic/TimeStruct.h"
-#include "logic/TimeStruct.h"
+#include "logic/DateStruct.h"
+#include "power/PowerManager.h"
 
 enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS};
-enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT, NEXT };
+enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT, NEXT};
 
-enum MenuSettingsScreen {TIME, SLEEPING, ABOUT};
+enum MenuSettingsScreen {TIME, DATE, SLEEPING, ABOUT};
 
 class Menu {
 private:
@@ -20,12 +21,14 @@ private:
     Keypad* keypad;
     Schedule* schedules[3];
     DS1307* RTC;
+    PowerManager* powerManager;
 
     MenuScreen currentScreen = PUMP1;
     MenuSubScreen currentSubScreen = ENABLE;    
     MenuSettingsScreen currentMenuSettingsScreen = TIME;
 
     TimeStruct currentTime;
+    DateStruct currentDate;
 
     String inputBuffer = "";
     bool isSubmenu = false;
@@ -33,6 +36,7 @@ private:
 
     String formatTime(TimeStruct time);
     String formatEditTime(String input);
+    String formatEditDate(String input);
     String formatAmount(unsigned long ammount);
     String centerText(const char* text);
 
@@ -44,13 +48,16 @@ private:
     String fillEmpty(String input);
 
 public:
-    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC);
+    Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager);
     void update(char key);
     void displayScreen();
     MenuScreen getCurrentScreen() const;
 
-    TimeStruct getCurrentTime();
+    TimeStruct getCurrentTime() const;;
     void setCurrentTime(TimeStruct input, bool updateRTC);
+
+    DateStruct getCurrentDate() const;
+    void setCurrentDate(DateStruct input, bool updateRTC);
     
     void lcdCreateCustomCharacters();
     void lcdCreateHomeScreen();

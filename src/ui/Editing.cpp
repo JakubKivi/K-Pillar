@@ -7,6 +7,14 @@ String Menu::formatEditTime(String input){
     return input.substring(0,2)+":"+input.substring(2,4);
 }
 
+
+String Menu::formatEditDate(String input){
+    while(input.length()<8){
+        input+="0";
+    }
+    return input.substring(0,2) + "." + input.substring(2,4) + "." + input.substring(4,8) + "r";
+}
+
 void Menu::lcdDrawEditing(){
     lcd->clear();
     lcd->setCursor(0, 0);

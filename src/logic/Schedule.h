@@ -21,7 +21,6 @@ private:
     TimeStruct wtrTime;
     unsigned long waterAmmount;
     
-    bool wateredToday = 0;  
     DateStruct nextWatering;
 
     EepromControl* EEPROM;
@@ -31,10 +30,10 @@ private:
 
 public:
 
-    void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, bool wateredToday, DateStruct nextWatering);
+    void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, DateStruct nextWatering);
 
     Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, EepromControl* EEPROM, LiquidCrystal_I2C* lcd);
-    bool update(TimeStruct currentTime);
+    bool update(TimeStruct currentTime, DateStruct currentDate);
 
     unsigned long getAmmount();
     void setAmmount(String ammount);

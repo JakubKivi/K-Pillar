@@ -25,7 +25,7 @@ byte rightArrow[8] = {
     B00000
 };
 
-Menu::Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC)
+Menu::Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager)
     : lcd(lcd), keypad(keypad), RTC(RTC) {
     for (int i = 0; i < 3; i++) {
         this->schedules[i] = schedules[i];
@@ -148,7 +148,7 @@ void Menu::lcdCreateHomeScreen(){
     delay(1000);
 }
 
-TimeStruct Menu::getCurrentTime(){
+TimeStruct Menu::getCurrentTime() const{
     return currentTime;
 }
 
@@ -157,4 +157,15 @@ void Menu::setCurrentTime(TimeStruct input, bool updateRTC){
         RTC->setTime(input.hour,input.minute,0);
         RTC->startClock();
     currentTime = input;
+}
+
+DateStruct Menu::getCurrentDate() const{
+    return currentDate;
+}
+
+void Menu::setCurrentDate(DateStruct input, bool updateRTC){
+    if(updateRTC)
+        RTC->setDate(input.day, input.month, input.year);
+        RTC->startClock();
+    currentDate = input;
 }

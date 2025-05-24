@@ -5,6 +5,7 @@ void Menu::lcdDrawSubMenu(){
     lcd->clear();
     lcd->setCursor(0, 0);
     if(currentScreen == SETTINGS){
+        String dateText;
         switch (currentMenuSettingsScreen)
         {
         case TIME:
@@ -15,12 +16,21 @@ void Menu::lcdDrawSubMenu(){
             lcd->print(centerText(formatTime(getCurrentTime()).c_str()));
             break;
 
+        case DATE:
+            lcd->write(byte(0));
+            lcd->print("4    Date    6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            dateText = String(currentDate.day)+"."+String(currentDate.month)+"."+String(1900+currentDate.year)+"r";
+            lcd->print(centerText( dateText.c_str() )); 
+            break;
+
         case SLEEPING:
             lcd->write(byte(0));
             lcd->print("4 Sleep Time 6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-            lcd->print("dupsko tak o");
+            lcd->print(centerText(String(powerManager->getNoInteractionThreshhold()).c_str()));
             break;
 
         case ABOUT:

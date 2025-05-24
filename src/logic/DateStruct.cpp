@@ -42,6 +42,45 @@ long DateStruct::daysSinceEpoch() const {
     return days;
 }
 
+
 int DateStruct::diffDays(const DateStruct& other) const {
     return (int)(this->daysSinceEpoch() - other.daysSinceEpoch());
+}
+
+void DateStruct::addDays(int daysToAdd) {
+    long totalDays = daysSinceEpoch() + daysToAdd;
+
+    // Now convert totalDays back to year, month, day
+    uint16_t newYear = 0;
+    while (totalDays >= daysInYear(newYear)) {
+        totalDays -= daysInYear(newYear);
+        ++newYear;
+    }
+
+    static const uint8_t daysInMonth[12] = {
+        31, 28, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31
+    };
+
+    uint8_t newMonth = 1;
+    while (true) {
+        uint8_t dim = daysInMonth[newMonth - 1];
+        if (newMonth == 2 && isLeapYear(newYear))
+            dim = 29;
+
+        if (totalDays < dim)
+            break;
+
+        totalDays -= dim;
+        ++newMonth;
+    }
+
+    day = (uint8_t)(totalDays + 1);
+    month = newMonth;
+    year = newYear;
+}
+
+DateStruct& DateStruct::operator+=(int daysToAdd) {
+    addDays(daysToAdd);
+    return *this;
 }
