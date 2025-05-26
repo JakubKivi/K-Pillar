@@ -71,7 +71,7 @@ int DateStruct::diffDays(const DateStruct& other) const {
 }
 
 void DateStruct::addDays(int daysToAdd) {
-    long totalDays = daysSinceEpoch() + daysToAdd;
+    long totalDays = daysSinceEpoch() -1 + daysToAdd;
 
     // Now convert totalDays back to year, month, day
     uint16_t newYear = 0;
@@ -86,8 +86,8 @@ void DateStruct::addDays(int daysToAdd) {
     };
 
     uint8_t newMonth = 1;
-    while (true) {
-        uint8_t dim = daysInMonth[newMonth - 1];
+    while (newMonth <= 12) {
+        uint8_t dim = daysInMonth[newMonth-1];
         if (newMonth == 2 && isLeapYear(newYear))
             dim = 29;
 
@@ -98,7 +98,7 @@ void DateStruct::addDays(int daysToAdd) {
         ++newMonth;
     }
 
-    day = (uint8_t)(totalDays + 1);
+    day = totalDays + 1;  
     month = newMonth;
     year = newYear;
 }
@@ -107,3 +107,5 @@ DateStruct& DateStruct::operator+=(int daysToAdd) {
     addDays(daysToAdd);
     return *this;
 }
+
+

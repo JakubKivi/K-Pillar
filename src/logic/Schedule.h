@@ -24,7 +24,7 @@ private:
     DateStruct nextWatering;
 
     EepromControl* EEPROM;
-    LiquidCrystal_I2C* lcd;
+    LiquidCrystal_I2C* lcd; 
 
     void updateEEPROM();
 

@@ -54,7 +54,7 @@ uint32_t EepromControl::readUInt32(unsigned int addr) {
 }
 
 unsigned int EepromControl::getScheduleBaseAddr(uint8_t index) {
-    return index * 10;  // przydziel 10 bajtów na każdy schedule
+    return index * 16;  
 }
 
 void EepromControl::writeSchedule(uint8_t index, bool enabled, unsigned int intervalDays, const TimeStruct& time, unsigned long waterAmmount, DateStruct nextWatering) {
@@ -63,10 +63,10 @@ void EepromControl::writeSchedule(uint8_t index, bool enabled, unsigned int inte
     writeUInt16(base + 1, intervalDays);
     Ewrite(base + 3, time.hour);
     Ewrite(base + 4, time.minute);
-    writeUInt32(base + 5, waterAmmount);
-    Ewrite(base + 6, nextWatering.day);
-    Ewrite(base + 7, nextWatering.month);
-    Ewrite(base + 8, nextWatering.year);
+    Ewrite(base + 5, nextWatering.day);
+    Ewrite(base + 6, nextWatering.month);
+    writeUInt16(base + 7, nextWatering.year);
+    writeUInt32(base + 9, waterAmmount);
 
 }
 
@@ -77,10 +77,10 @@ void EepromControl::readAllSchedules(bool enabled[], unsigned int intervalDays[]
         intervalDays[i] = readUInt16(base + 1);
         times[i].hour = Eread(base + 3);
         times[i].minute = Eread(base + 4);
-        waterAmmount[i] = readUInt32(base + 5);
-        nextWatering[i].day = Eread(base+6);
-        nextWatering[i].month = Eread(base+7);
-        nextWatering[i].year = Eread(base+8);
+        nextWatering[i].day = Eread(base+5);
+        nextWatering[i].month = Eread(base+6);
+        nextWatering[i].year = readUInt16(base+7);
+        waterAmmount[i] = readUInt32(base + 9);
     }
 }
 

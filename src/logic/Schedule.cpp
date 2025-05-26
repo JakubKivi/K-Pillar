@@ -20,7 +20,7 @@ bool Schedule::update(TimeStruct currentTime, DateStruct currentDate) {
 
     if( enabled && waterAmmount > 0 ){
         int diff = nextWatering.diffDays(currentDate);
-        if ( diff > 0 || (diff == 0 && currentTime.isLaterThan(wtrTime)))
+        if ( diff < 0 || (diff == 0 && currentTime.isLaterThan(wtrTime)))
         {
             lcd->clear();
             lcd->setCursor(0, 0);
@@ -32,9 +32,9 @@ bool Schedule::update(TimeStruct currentTime, DateStruct currentDate) {
             pump->setState(true);
             delay(waterAmmount); 
             pump->setState(false);
-            nextWatering = DateStruct(25,5,2025);
+
             
-            //nextWatering += intervalDays;
+            nextWatering += intervalDays;
 
             return 1;
         }

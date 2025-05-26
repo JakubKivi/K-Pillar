@@ -56,6 +56,12 @@ void setup() {
     unsigned long waterAmmount[NUM_SCHEDULES];
     DateStruct nextWatering[NUM_SCHEDULES];
 
+    // EEPROM.writeSchedule(0, 0, 2, TimeStruct(15,0), 3000, DateStruct(26,5,2025));
+    // EEPROM.writeSchedule(1, 0, 3, TimeStruct(16,0), 6000, DateStruct(27,5,2025));
+    // EEPROM.writeSchedule(2, 0, 4, TimeStruct(18,0), 8000, DateStruct(28,5,2025));
+
+    
+
     EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount, nextWatering);
     for (int i = 0; i < 2; i++){
         schedules[i]->setValues(enabled[i],intervalDays[i],times[i],waterAmmount[i], nextWatering[i]);
@@ -95,6 +101,7 @@ void setup() {
     if(key=='*'){
         adminFlag=true;
     }
+
 }
 
 unsigned int counter =0;
