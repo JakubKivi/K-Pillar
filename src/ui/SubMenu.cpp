@@ -34,6 +34,15 @@ void Menu::lcdDrawSubMenu(){
             lcd->print(centerText( String(text.substring(0, text.length()-3)+" [s]").c_str() ));
             break;
 
+        case ADMIN:
+            lcd->write(byte(0));
+            lcd->print("4    Admin   6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            text = String(adminFlag);
+            lcd->print(centerText( text.c_str() ));
+            break;
+
         case ABOUT:
             lcd->setCursor(0, 0);
             lcd->write(byte(0));

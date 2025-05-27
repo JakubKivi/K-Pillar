@@ -46,8 +46,6 @@ Schedule* schedules[] = {&schedule1, &schedule2, &schedule3};
 PowerManager powerManager(&lcd, &keypad, 15000);
 Menu menu(&lcd, &keypad, schedules, &RTC, &powerManager, &EEPROM);  
 
-bool adminFlag=false;
-
 void setup() {
 
     bool enabled[NUM_SCHEDULES];
@@ -99,7 +97,7 @@ void setup() {
 
     char key = keypad.getKey();
     if(key=='*'){
-        adminFlag=true;
+        menu.adminFlag=true;
     }
 
 }
@@ -137,7 +135,7 @@ void loop() {
     TimeStruct time = menu.getCurrentTime();
     DateStruct date = menu.getCurrentDate();
 
-    if (!adminFlag)
+    if (!menu.adminFlag)
     {
         if(schedule1.update(time, date) or schedule2.update(time, date) or schedule3.update(time, date)) 
             menu.displayScreen();  

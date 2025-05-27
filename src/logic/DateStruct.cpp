@@ -103,6 +103,12 @@ void DateStruct::addDays(int daysToAdd) {
     year = newYear;
 }
 
+DateStruct DateStruct::operator+(int daysToAdd) const {
+    DateStruct result = *this;
+    result.addDays(daysToAdd);
+    return result;
+}
+
 DateStruct& DateStruct::operator+=(int daysToAdd) {
     addDays(daysToAdd);
     return *this;

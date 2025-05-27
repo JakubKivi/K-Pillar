@@ -10,6 +10,8 @@ void Menu::update(char key) {
                 currentScreen = (currentScreen == SETTINGS) ? PUMP1 : (MenuScreen)(currentScreen + 1);
             } else if (key == '*') {  
                 isSubmenu = true;
+            }else if (key == '#') {  
+                currentScreen = PUMP1;
             }
         }else if(isSubmenu){
             if(currentScreen == SETTINGS){
@@ -18,7 +20,11 @@ void Menu::update(char key) {
                 } else if (key == '6') {  // Prawo
                     currentMenuSettingsScreen = (currentMenuSettingsScreen == ABOUT) ? TIME : (MenuSettingsScreen)(currentMenuSettingsScreen + 1);
                 }else if (key == '*') {  
-                    if (currentMenuSettingsScreen != ABOUT)
+                    if (currentMenuSettingsScreen == ADMIN)
+                    {
+                        adminFlag=!adminFlag;
+                        
+                    }else if (currentMenuSettingsScreen != ABOUT)
                     {
                         isEditing = true;
                         isSubmenu = false;
@@ -34,12 +40,14 @@ void Menu::update(char key) {
                 if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
                 } 
-            }else{
+            }else{ //Pump 1-3
                 
                 if (key == '4') {  // Lewo
                     currentSubScreen = (currentSubScreen == ENABLE) ? NEXT : (MenuSubScreen)(currentSubScreen - 1);
                 } else if (key == '6') {  // Prawo
                     currentSubScreen = (currentSubScreen == NEXT) ? ENABLE : (MenuSubScreen)(currentSubScreen + 1);
+                }else if (key == '0') {  // Prawo
+                    schedules[currentScreen]->setNextWatering(currentDate+schedules[currentScreen]->getInterval());
                 }else if (key == '#') {  // Zamknięcie submenu
                     isSubmenu = false;
                     currentSubScreen = ENABLE;

@@ -32,10 +32,9 @@ bool Schedule::update(TimeStruct currentTime, DateStruct currentDate) {
             pump->setState(true);
             delay(waterAmmount); 
             pump->setState(false);
-
             
-            nextWatering += intervalDays;
-
+            setNextWatering(nextWatering += intervalDays);
+            
             return 1;
         }
     }

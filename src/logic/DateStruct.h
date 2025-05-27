@@ -15,6 +15,7 @@ public:
     // Ujemna jeśli other jest później
     int diffDays(const DateStruct& other) const;
     void addDays(int daysToAdd);
+    DateStruct operator+(int daysToAdd) const;
     DateStruct& operator+=(int daysToAdd);
 
 private:

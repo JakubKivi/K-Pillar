@@ -10,10 +10,10 @@
 #include "logic/DateStruct.h"
 #include "power/PowerManager.h"
 
-enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY, SETTINGS};
+enum MenuScreen { PUMP1, PUMP2, PUMP3,  SETTINGS, RELAY};
 enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT, NEXT};
 
-enum MenuSettingsScreen {TIME, DATE, SLEEPING, ABOUT};
+enum MenuSettingsScreen {TIME, DATE, SLEEPING, ADMIN, ABOUT};
 
 class Menu {
 private:
@@ -49,6 +49,8 @@ private:
     String fillEmpty(String input);
 
 public:
+    bool adminFlag=false;
+
     Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager, EepromControl* EEPROM);
     void update(char key);
     void displayScreen();
