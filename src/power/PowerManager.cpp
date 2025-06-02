@@ -2,7 +2,7 @@
 #include <avr/wdt.h>
 
 volatile uint8_t wakeUpCounter = 0;
-const uint8_t wakeUpThreshold = 4; // 23 * 8s ≈ 184s (~3 min)
+const uint8_t wakeUpThreshold = 8; // 23 * 8s ≈ 184s (~3 min)
 
 volatile bool wakeUpFlag = false;
 volatile bool silentWakeUpFlag = false;
@@ -55,7 +55,7 @@ void globalWakeUpISR() {
 
 
 void PowerManager::goToSleep() {
-    Serial.println("Ide w spanko");
+    // Serial.println("Ide w spanko");
     delay(100);
 
     lcd->noBacklight();
@@ -102,7 +102,7 @@ void PowerManager::wakeUp() {
     if (silentWakeUpFlag)
     {
         isSilentWakeUp=true;
-        Serial.println("Cicha pobudka");
+        // Serial.println("Cicha pobudka");
     }else{
         isSilentWakeUp=false;
         lcd->backlight();

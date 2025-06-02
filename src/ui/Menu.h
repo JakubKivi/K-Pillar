@@ -10,7 +10,7 @@
 #include "logic/DateStruct.h"
 #include "power/PowerManager.h"
 
-enum MenuScreen { PUMP1, PUMP2, PUMP3,  SETTINGS, RELAY};
+enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY,  SETTINGS};
 enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT, NEXT};
 
 enum MenuSettingsScreen {TIME, DATE, SLEEPING, ADMIN, ABOUT};

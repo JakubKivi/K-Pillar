@@ -1,6 +1,6 @@
 #include "Pump.h"
 
-// #define IS_DEV  
+#define IS_DEV  
 
 Pump::Pump(int pin, int id) : pin(pin), state(false), id(id) {
     pinMode(pin, OUTPUT);

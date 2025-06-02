@@ -124,9 +124,9 @@ void loop() {
     if (counter>100)  //~10 sec
     {
         counter=0;
-        Serial.println(RTC.getDateTimeString());
+        // Serial.println(RTC.getDateTimeString());
         DateStruct a = menu.getCurrentDate();
-        Serial.println(String(a.day)+"."+a.month+"."+a.year);
+        // Serial.println(String(a.day)+"."+a.month+"."+a.year);
         tm read = RTC.getDateTime();
         menu.setCurrentTime(TimeStruct(read.tm_hour ,read.tm_min), false);
         menu.setCurrentDate(DateStruct(read.tm_mday, read.tm_mon+1, 1900+read.tm_year),false);
@@ -135,8 +135,7 @@ void loop() {
     TimeStruct time = menu.getCurrentTime();
     DateStruct date = menu.getCurrentDate();
 
-    if (!menu.adminFlag)
-    {
+    if (!menu.adminFlag){
         if(schedule1.update(time, date) or schedule2.update(time, date) or schedule3.update(time, date)) 
             menu.displayScreen();  
     }   
