@@ -6,24 +6,20 @@
 
 class RelaySchedule : public Schedule {
 private:
-    bool isOn;
-    unsigned long counterTime;
-    TimeStruct TimeOn;
     TimeStruct TimeOff;
-    TimeStruct LastSwitchTime;
     Relay* relay;
 
+    void updateEEPROM() override;
+
 public:
-    RelaySchedule(Relay* relay, Pump* pump, bool enabled, unsigned int intervalDays, 
-                  TimeStruct wtrTime, unsigned long waterAmmount, 
-                  EepromControl* EEPROM, LiquidCrystal_I2C* lcd,
-                  TimeStruct TimeOn, TimeStruct TimeOff);
+    RelaySchedule(Relay* relay, EepromControl* EEPROM, LiquidCrystal_I2C* lcd);
     
     bool update(TimeStruct currentTime, DateStruct currentDate) override;
     
-    void setTimeOn(TimeStruct newTimeOn);
+    void setValues(bool enabled, TimeStruct wtrTime, TimeStruct timeOff);
+    
     void setTimeOff(TimeStruct newTimeOff);
-    TimeStruct getTimeOn() const;
+    void setTimeOff(String input);
     TimeStruct getTimeOff() const;
 };
 

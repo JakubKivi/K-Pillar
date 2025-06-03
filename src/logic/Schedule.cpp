@@ -4,8 +4,8 @@
 int Schedule::globalIndexCounter = 0;
 
 
-Schedule::Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, EepromControl* EEPROM,  LiquidCrystal_I2C* lcd)
-    : pump(pump), enabled(enabled), intervalDays(intervalDays), wtrTime(wtrTime), waterAmmount(waterAmmount), EEPROM(EEPROM), lcd(lcd) {}
+Schedule::Schedule(Pump* pump, EepromControl* EEPROM,  LiquidCrystal_I2C* lcd)
+    : pump(pump), EEPROM(EEPROM), lcd(lcd) {}
 
 void Schedule::setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, DateStruct nextWatering){
     this->enabled=enabled;

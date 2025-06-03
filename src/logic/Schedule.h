@@ -9,32 +9,33 @@
 #include "hardware/EepromControl.h"
 #include "logic/DateStruct.h"
 
-class Schedule {
+class Schedule
+{
 private:
-    static int globalIndexCounter; 
-    int index; 
+    static int globalIndexCounter;
+    int index;
 
-    Pump* pump;
-    
+    Pump *pump;
+
     unsigned int intervalDays;
-    TimeStruct wtrTime;
     unsigned long waterAmmount;
-    
+
     DateStruct nextWatering;
 
-    EepromControl* EEPROM;
-    LiquidCrystal_I2C* lcd; 
+    LiquidCrystal_I2C *lcd;
 
-    void updateEEPROM();
+    virtual void updateEEPROM();
 
 protected:
     bool enabled;
 
-public:
+    EepromControl *EEPROM;
+    TimeStruct wtrTime;
 
+public:
     void setValues(bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, DateStruct nextWatering);
 
-    Schedule(Pump* pump, bool enabled, unsigned int intervalDays, TimeStruct wtrTime, unsigned long waterAmmount, EepromControl* EEPROM, LiquidCrystal_I2C* lcd);
+    Schedule(Pump *pump, EepromControl *EEPROM, LiquidCrystal_I2C *lcd);
     virtual bool update(TimeStruct currentTime, DateStruct currentDate);
 
     unsigned long getAmmount();
@@ -49,7 +50,7 @@ public:
 
     DateStruct getNextWatering();
     void setNextWatering(DateStruct nextWatering);
-    
+
     bool getEnabled();
     void setEnabled(bool input);
 };

@@ -9,9 +9,11 @@
 #include "logic/TimeStruct.h"
 #include "logic/DateStruct.h"
 #include "power/PowerManager.h"
+#include "logic/RelaySchedule.h"
 
 enum MenuScreen { PUMP1, PUMP2, PUMP3, RELAY,  SETTINGS};
 enum MenuSubScreen { ENABLE, FREQ, TIMING, AMMOUNT, NEXT};
+enum RelaySubScreen { RENABLE, RTIME, RTIMEOFF };
 
 enum MenuSettingsScreen {TIME, DATE, SLEEPING, ADMIN, ABOUT};
 
@@ -26,6 +28,7 @@ private:
 
     MenuScreen currentScreen = PUMP1;
     MenuSubScreen currentSubScreen = ENABLE;    
+    RelaySubScreen currentRelaySubScreen = RENABLE;    
     MenuSettingsScreen currentMenuSettingsScreen = TIME;
 
     TimeStruct currentTime;

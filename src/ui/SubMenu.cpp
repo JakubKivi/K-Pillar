@@ -1,10 +1,11 @@
 #include "menu.h"
 
-
-void Menu::lcdDrawSubMenu(){
+void Menu::lcdDrawSubMenu()
+{
     lcd->clear();
     lcd->setCursor(0, 0);
-    if(currentScreen == SETTINGS){
+    if (currentScreen == SETTINGS)
+    {
         String text;
         switch (currentMenuSettingsScreen)
         {
@@ -21,8 +22,8 @@ void Menu::lcdDrawSubMenu(){
             lcd->print("4    Date    6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-            text = String(currentDate.day)+"."+String(currentDate.month)+"."+String(currentDate.year)+"r";
-            lcd->print(centerText( text.c_str() )); 
+            text = String(currentDate.day) + "." + String(currentDate.month) + "." + String(currentDate.year) + "r";
+            lcd->print(centerText(text.c_str()));
             break;
 
         case SLEEPING:
@@ -31,7 +32,7 @@ void Menu::lcdDrawSubMenu(){
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
             text = String(powerManager->getNoInteractionThreshhold());
-            lcd->print(centerText( String(text.substring(0, text.length()-3)+" [s]").c_str() ));
+            lcd->print(centerText(String(text.substring(0, text.length() - 3) + " [s]").c_str()));
             break;
 
         case ADMIN:
@@ -40,7 +41,7 @@ void Menu::lcdDrawSubMenu(){
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
             text = String(adminFlag);
-            lcd->print(centerText( text.c_str() ));
+            lcd->print(centerText(text.c_str()));
             break;
 
         case ABOUT:
@@ -55,18 +56,12 @@ void Menu::lcdDrawSubMenu(){
         default:
             break;
         }
-            
-    }else if(currentScreen == RELAY){
-        lcd->setCursor(0, 0);
-        lcd->print(centerText("TODO"));
-        lcd->setCursor(0, 1);
-        lcd->print(centerText("# to exit"));
-
-    }else{   // PUMP 1 - 3
-        String line;
-        switch (currentSubScreen)
+    }
+    else if (currentScreen == RELAY)
+    {
+        switch (currentRelaySubScreen)
         {
-        case ENABLE: 
+        case RENABLE:
             lcd->write(byte(0));
             lcd->print("4  * Toggle  6");
             lcd->write(byte(1));
@@ -74,49 +69,91 @@ void Menu::lcdDrawSubMenu(){
             if (schedules[currentScreen]->getEnabled())
             {
                 lcd->print(centerText("Enabled"));
-            }else{
+            }
+            else
+            {
                 lcd->print(centerText("Disabled"));
             }
+            break;
             
-        break;
+        case RTIME:
+            lcd->write(byte(0));
+            lcd->print("4   Time On  6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(formatTime(schedules[currentScreen]->getWtrTime()).c_str()));
+            break;
 
-        case FREQ: 
+        case RTIMEOFF:
+            lcd->write(byte(0));
+            lcd->print("4  Time Off  6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(formatTime(static_cast<RelaySchedule *>(schedules[currentScreen])->getTimeOff()).c_str()));
+            break;
+
+        default:
+            break;
+        }
+    }
+    else
+    { // PUMP 1 - 3
+        String line;
+        switch (currentSubScreen)
+        {
+        case ENABLE:
+            lcd->write(byte(0));
+            lcd->print("4  * Toggle  6");
+            lcd->write(byte(1));
+            lcd->setCursor(0, 1);
+            if (schedules[currentScreen]->getEnabled())
+            {
+                lcd->print(centerText("Enabled"));
+            }
+            else
+            {
+                lcd->print(centerText("Disabled"));
+            }
+
+            break;
+
+        case FREQ:
             lcd->write(byte(0));
             lcd->print("4    Every   6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
             line = String(schedules[currentScreen]->getInterval());
             line += " days";
-            lcd->print(centerText( line.c_str() ));
-        break;
+            lcd->print(centerText(line.c_str()));
+            break;
 
-        case TIMING: //ammount
+        case TIMING: // ammount
             lcd->write(byte(0));
             lcd->print("4    Time    6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-        
-            lcd->print(centerText( formatTime(schedules[currentScreen]->getWtrTime()).c_str()));
-        break;
 
-        case AMMOUNT: //ammount
+            lcd->print(centerText(formatTime(schedules[currentScreen]->getWtrTime()).c_str()));
+            break;
+
+        case AMMOUNT: // ammount
             lcd->write(byte(0));
             lcd->print("4  Duration  6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-        
-            lcd->print(centerText( formatAmount(schedules[currentScreen]->getAmmount()).c_str()));
-        break;
 
-        case NEXT: //next
+            lcd->print(centerText(formatAmount(schedules[currentScreen]->getAmmount()).c_str()));
+            break;
+
+        case NEXT: // next
             lcd->write(byte(0));
             lcd->print("4    Next    6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
             DateStruct date = schedules[currentScreen]->getNextWatering();
-            line = String(date.day)+"."+String(date.month)+"."+String(date.year)+"r.";
-            lcd->print(centerText( line.c_str()));
-        break;
+            line = String(date.day) + "." + String(date.month) + "." + String(date.year) + "r.";
+            lcd->print(centerText(line.c_str()));
+            break;
 
         default:
             break;

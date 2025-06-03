@@ -3,8 +3,6 @@
 #include <Arduino.h>
 #include "logic/TimeStruct.h"
 
-#define NUM_SCHEDULES 3
-
 EepromControl::EepromControl() {
     Wire.begin();
 }
@@ -70,6 +68,16 @@ void EepromControl::writeSchedule(uint8_t index, bool enabled, unsigned int inte
 
 }
 
+void EepromControl::writeRelaySchedule( bool enabled, TimeStruct time, TimeStruct timeOff){
+    unsigned int base = getScheduleBaseAddr(NUM_SCHEDULES+1);
+
+    Ewrite(base, enabled ? 1 : 0);
+    Ewrite(base + 1, time.hour);
+    Ewrite(base + 2, time.minute);
+    Ewrite(base + 3, timeOff.hour);
+    Ewrite(base + 4, timeOff.minute);
+}
+
 void EepromControl::readAllSchedules(bool enabled[], unsigned int intervalDays[], TimeStruct times[], unsigned long waterAmmount[], DateStruct nextWatering[]) {
     for (uint8_t i = 0; i < NUM_SCHEDULES; i++) {
         unsigned int base = getScheduleBaseAddr(i);
@@ -83,6 +91,17 @@ void EepromControl::readAllSchedules(bool enabled[], unsigned int intervalDays[]
         waterAmmount[i] = readUInt32(base + 9);
     }
 }
+
+void EepromControl::readRelaySchedule(bool *enabled, TimeStruct *time, TimeStruct *timeOff){
+    unsigned int base = getScheduleBaseAddr(NUM_SCHEDULES+1);
+
+    *enabled = Eread(base); 
+    time->hour = Eread(base + 1);
+    time->minute = Eread(base + 2);
+    timeOff->hour = Eread(base + 3);
+    timeOff->minute = Eread(base + 4);
+}
+
 
 void EepromControl::saveSettings(uint16_t setting1) {
     writeUInt16(SETTINGS_BASE_ADDR, setting1);   

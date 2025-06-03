@@ -1,52 +1,51 @@
 #include "RelaySchedule.h"
 
-RelaySchedule::RelaySchedule(Relay* relay, Pump* pump, bool enabled, unsigned int intervalDays,
-                           TimeStruct wtrTime, unsigned long waterAmmount,
-                           EepromControl* EEPROM, LiquidCrystal_I2C* lcd,
-                           TimeStruct TimeOn, TimeStruct TimeOff)
-    : Schedule(pump, enabled, intervalDays, wtrTime, waterAmmount, EEPROM, lcd),
-      relay(relay), TimeOn(TimeOn), TimeOff(TimeOff), isOn(false), counterTime(0) {}
+RelaySchedule::RelaySchedule(Relay* relay, EepromControl* EEPROM, LiquidCrystal_I2C* lcd)
+    : Schedule(nullptr, EEPROM, lcd),
+      relay(relay){}
 
 bool RelaySchedule::update(TimeStruct currentTime, DateStruct currentDate) {
     if (!enabled) {
-        if (isOn) {
-            relay->setState(false);
-            isOn = false;
-        }
-        return true;
-    }
+        bool targetState = false;
 
-    unsigned long currentTotalSeconds = currentTime.hour * 3600 + currentTime.minute* 60;
-    unsigned long onTotalSeconds = TimeOn.hour * 3600 + TimeOn.minute * 60;
-    unsigned long offTotalSeconds = TimeOff.hour * 3600 + TimeOff.minute * 60;
+        if (wtrTime.isLaterThan(TimeOff)) {// Normal
+            targetState = !currentTime.isLaterThan(TimeOff) || 
+                          currentTime.isLaterThan(wtrTime);
 
-    if (currentTotalSeconds >= onTotalSeconds && currentTotalSeconds <= offTotalSeconds) {
-        if (!isOn) {
-            relay->setState(true);
-            isOn = true;
-            LastSwitchTime = currentTime;
+        } else {    // Through midnight
+            targetState = currentTime.isLaterThan(wtrTime) && 
+                        !currentTime.isLaterThan(TimeOff);
         }
+
+        relay->setState(targetState);
     } else {
-        if (isOn) {
-            relay->setState(false);
-            isOn = false;
-            LastSwitchTime = currentTime;
-        }
+        relay->setState(false);
     }
 
-    return Schedule::update(currentTime, currentDate);
+    return false;
 }
 
-void RelaySchedule::setTimeOn(TimeStruct newTimeOn) {
-    TimeOn = newTimeOn;
+void RelaySchedule::setValues(bool enabled, TimeStruct wtrTime, TimeStruct timeOff) {
+    this->enabled = enabled;
+    this->wtrTime = wtrTime;
+    this->TimeOff = timeOff;
+    updateEEPROM();
+}
+
+void RelaySchedule::updateEEPROM(){
+    EEPROM->writeRelaySchedule(enabled, wtrTime, TimeOff);
 }
 
 void RelaySchedule::setTimeOff(TimeStruct newTimeOff) {
     TimeOff = newTimeOff;
+    updateEEPROM();
 }
 
-TimeStruct RelaySchedule::getTimeOn() const {
-    return TimeOn;
+void RelaySchedule::setTimeOff(String input) {
+    if (input.length() == 4) {
+        TimeOff = TimeStruct(input.substring(0, 2).toInt(), input.substring(2, 4).toInt());
+        updateEEPROM();
+    }
 }
 
 TimeStruct RelaySchedule::getTimeOff() const {

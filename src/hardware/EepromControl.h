@@ -8,6 +8,8 @@
 
 #define EEPROM_ADDR 0x50  // domyślny adres dla AT24C32
 
+#define NUM_SCHEDULES 3
+
 #define SETTINGS_BASE_ADDR 100  // miejsce oddzielone od harmonogramów
 
 class EepromControl {
@@ -19,6 +21,9 @@ public:
 
     void writeSchedule(uint8_t index, bool enabled, unsigned int intervalDays, const TimeStruct& time, unsigned long waterAmmount, DateStruct nextWatering);
     void readAllSchedules(bool enabled[], unsigned int intervalDays[], TimeStruct times[], unsigned long waterAmmount[], DateStruct nextWatering[]);
+    
+    void writeRelaySchedule( bool enabled, TimeStruct time, TimeStruct timeOff);
+    void readRelaySchedule(bool *enabled, TimeStruct *time, TimeStruct *timeOff);
 
     void saveSettings(uint16_t noInteractionThreshhold);
     void readSettings(uint16_t& noInteractionThreshhold);

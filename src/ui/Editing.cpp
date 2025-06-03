@@ -45,7 +45,27 @@ void Menu::lcdDrawEditing(){
         default:
             break;
         }
-        
+
+    }else if(currentScreen == RELAY){
+        switch (currentRelaySubScreen)
+        {
+        case RTIME:
+            lcd->setCursor(0, 0);
+            lcd->print(centerText("Time On"));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(  formatEditTime(inputBuffer).c_str()  )  );
+        break;
+
+        case RTIMEOFF:
+            lcd->setCursor(0, 0);
+            lcd->print(centerText("Time Off"));
+            lcd->setCursor(0, 1);
+            lcd->print(centerText(  formatEditTime(inputBuffer).c_str()  )  );
+        break;
+
+        default:
+            break;
+        }
 
     }else{
         switch (currentSubScreen)
