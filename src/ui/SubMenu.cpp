@@ -37,10 +37,10 @@ void Menu::lcdDrawSubMenu()
 
         case ADMIN:
             lcd->write(byte(0));
-            lcd->print("4    Admin   6");
+            lcd->print("4   Update  6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
-            text = String(adminFlag);
+            text = String(adminFlag? "Off" : "On");
             lcd->print(centerText(text.c_str()));
             break;
 
@@ -78,7 +78,7 @@ void Menu::lcdDrawSubMenu()
             
         case RTIME:
             lcd->write(byte(0));
-            lcd->print("4   Time On  6");
+            lcd->print("4  Time On   6");
             lcd->write(byte(1));
             lcd->setCursor(0, 1);
             lcd->print(centerText(formatTime(schedules[currentScreen]->getWtrTime()).c_str()));

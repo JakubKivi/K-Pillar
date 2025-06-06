@@ -24,6 +24,7 @@ bool Schedule::update(TimeStruct currentTime, DateStruct currentDate) {
         {
             lcd->clear();
             lcd->setCursor(0, 0);
+            lcd->backlight();
             String message = String(" Irrigating [")+ String(pump->id) + String("]");
             lcd->print(message);
             lcd->setCursor(0, 1);

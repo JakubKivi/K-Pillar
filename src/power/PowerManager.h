@@ -21,7 +21,7 @@ public:
     unsigned long getNoInteractionThreshhold();
     void setNoInteractionThreshhold(unsigned long input);
 
-    void update();
+    bool update();
     void resetTimer();
     void goToSleep();
     void wakeUp();

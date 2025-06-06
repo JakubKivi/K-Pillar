@@ -32,16 +32,17 @@ void PowerManager::setNoInteractionThreshhold(unsigned long input){
     noInteractionThreshhold = input;
 }
 
-void PowerManager::update() {    
+bool PowerManager::update() {    
     if (wakeUpFlag) {
         wakeUp();
         wakeUpFlag = false;
-        return;
+        return true;
     }
 
     if (millis() - lastInteractionTime > noInteractionThreshhold) {
         goToSleep(); 
     }
+    return false; // Nie było interakcji, nie aktualizujemy ekranu
 }
 
 void PowerManager::resetTimer() {
@@ -57,7 +58,7 @@ void globalWakeUpISR() {
 void PowerManager::goToSleep() {
     // Serial.println("Ide w spanko");
     delay(100);
-
+    lcd->clear();
     lcd->noBacklight();
 
     pinMode(3, INPUT_PULLUP);    

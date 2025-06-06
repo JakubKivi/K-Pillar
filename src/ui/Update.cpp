@@ -95,6 +95,13 @@ void Menu::update(char key)
                 {
                     if (currentSubScreen == NEXT)
                     {
+                        schedules[currentScreen]->setNextWatering(currentDate);
+                    }
+                }
+                else if (key == '1')
+                {
+                    if (currentSubScreen == NEXT)
+                    {
                         schedules[currentScreen]->setNextWatering(currentDate + schedules[currentScreen]->getInterval());
                     }
                 }

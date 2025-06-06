@@ -27,7 +27,7 @@ byte rightArrow[8] = {
 
 Menu::Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager, EepromControl* EEPROM)
     : lcd(lcd), keypad(keypad), RTC(RTC), powerManager(powerManager), EEPROM(EEPROM) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         this->schedules[i] = schedules[i];
     }
     //currentTime = TimeStruct( RTC->getHours(), RTC->getMinutes() );
@@ -77,18 +77,21 @@ String Menu::centerText(const char* text) {
 
 
 
-void Menu::displayScreen() {
+void Menu::displayScreen(bool isSilentWakeUp){         
     lcd->clear();
-    if (isSubmenu){
-        lcdDrawSubMenu();
-        
-    }else if (isEditing){
-        lcdDrawEditing();
+    if (!isSilentWakeUp) 
+    {
+        if (isSubmenu){
+            lcdDrawSubMenu();
+            
+        }else if (isEditing){
+            lcdDrawEditing();
 
-    }else{
-        lcdDrawMenu(); 
+        }else{
+            lcdDrawMenu(); 
 
-    }
+        }
+    }          
 }
 
 MenuScreen Menu::getCurrentScreen() const{ 

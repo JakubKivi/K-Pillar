@@ -21,7 +21,7 @@ class Menu {
 private:
     LiquidCrystal_I2C* lcd;
     Keypad* keypad;
-    Schedule* schedules[3];
+    Schedule* schedules[4];
     DS1307* RTC;
     PowerManager* powerManager;
     EepromControl* EEPROM;
@@ -56,7 +56,7 @@ public:
 
     Menu(LiquidCrystal_I2C* lcd, Keypad* keypad, Schedule* schedules[], DS1307* RTC, PowerManager* powerManager, EepromControl* EEPROM);
     void update(char key);
-    void displayScreen();
+    void displayScreen(bool isSilentWakeUp=false);
     MenuScreen getCurrentScreen() const;
 
     TimeStruct getCurrentTime() const;;

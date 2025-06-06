@@ -33,9 +33,9 @@ byte colPins[COLS] = {7, 8, 12};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-Pump pump1(11, 1);
+Pump pump1(9, 1);
 Pump pump2(10, 2);
-Pump pump3(9, 3);
+Pump pump3(11, 3);
 Relay relay(A3);
 
 Schedule schedule1(&pump1, &EEPROM, &lcd);
@@ -64,7 +64,7 @@ void setup()
     //EEPROM.writeRelaySchedule(0, TimeStruct(18, 0), TimeStruct(22, 0));
 
     EEPROM.readAllSchedules(enabled, intervalDays, times, waterAmmount, nextWatering);
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i <= 2; i++)
     {
         schedules[i]->setValues(enabled[i], intervalDays[i], times[i], waterAmmount[i], nextWatering[i]);
     }
@@ -119,7 +119,11 @@ unsigned int counter = 0;
 
 void loop()
 {
-    powerManager.update();
+    if (powerManager.update())
+    {
+        menu.displayScreen();
+    }
+    
     char key = keypad.getKey();
 
     if (key)
@@ -141,22 +145,24 @@ void loop()
     if (counter > 100) //~10 sec
     {
         counter = 0;
-        // Serial.println(RTC.getDateTimeString());
+        Serial.println(RTC.getDateTimeString());
         DateStruct a = menu.getCurrentDate();
-        // Serial.println(String(a.day)+"."+a.month+"."+a.year);
+        Serial.println(String(a.day)+"."+a.month+"."+a.year);
         tm read = RTC.getDateTime();
         menu.setCurrentTime(TimeStruct(read.tm_hour, read.tm_min), false);
         menu.setCurrentDate(DateStruct(read.tm_mday, read.tm_mon + 1, 1900 + read.tm_year), false);
+        
+        TimeStruct time = menu.getCurrentTime();
+        DateStruct date = menu.getCurrentDate();
+
+        if (!menu.adminFlag)
+        {
+            if (schedule1.update(time, date) or schedule2.update(time, date) or schedule3.update(time, date))
+                menu.displayScreen(powerManager.isSilentWakeUp);
+            relaySchedule.update(time, date);
+        }
     }
 
-    TimeStruct time = menu.getCurrentTime();
-    DateStruct date = menu.getCurrentDate();
-
-    if (!menu.adminFlag)
-    {
-        if (schedule1.update(time, date) or schedule2.update(time, date) or schedule3.update(time, date))
-            menu.displayScreen();
-    }
 
     delay(100);
 }

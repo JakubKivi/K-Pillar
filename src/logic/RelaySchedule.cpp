@@ -5,18 +5,15 @@ RelaySchedule::RelaySchedule(Relay* relay, EepromControl* EEPROM, LiquidCrystal_
       relay(relay){}
 
 bool RelaySchedule::update(TimeStruct currentTime, DateStruct currentDate) {
-    if (!enabled) {
+    if (enabled) {
         bool targetState = false;
-
-        if (wtrTime.isLaterThan(TimeOff)) {// Normal
+        if (wtrTime.isLaterThan(TimeOff)) {// Through midnight
             targetState = !currentTime.isLaterThan(TimeOff) || 
                           currentTime.isLaterThan(wtrTime);
-
-        } else {    // Through midnight
+        } else {    // Normal
             targetState = currentTime.isLaterThan(wtrTime) && 
                         !currentTime.isLaterThan(TimeOff);
         }
-
         relay->setState(targetState);
     } else {
         relay->setState(false);
