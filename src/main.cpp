@@ -28,8 +28,9 @@ char keys[ROWS][COLS] = {
     {'4', '5', '6'},
     {'7', '8', '9'},
     {'*', '0', '#'}};
-byte rowPins[ROWS] = {3, 4, 5, 6};
-byte colPins[COLS] = {7, 8, 12};
+
+byte rowPins[ROWS] = {4, 12, 8, 6};
+byte colPins[COLS] = {5, 3, 7};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
@@ -145,9 +146,9 @@ void loop()
     if (counter > 100) //~10 sec
     {
         counter = 0;
-        Serial.println(RTC.getDateTimeString());
-        DateStruct a = menu.getCurrentDate();
-        Serial.println(String(a.day)+"."+a.month+"."+a.year);
+        // Serial.println(RTC.getDateTimeString());
+        // DateStruct a = menu.getCurrentDate();
+        // Serial.println(String(a.day)+"."+a.month+"."+a.year);
         tm read = RTC.getDateTime();
         menu.setCurrentTime(TimeStruct(read.tm_hour, read.tm_min), false);
         menu.setCurrentDate(DateStruct(read.tm_mday, read.tm_mon + 1, 1900 + read.tm_year), false);

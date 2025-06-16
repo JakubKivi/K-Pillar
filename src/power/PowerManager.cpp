@@ -5,6 +5,7 @@ volatile uint8_t wakeUpCounter = 0;
 const uint8_t wakeUpThreshold = 8; // 23 * 8s ≈ 184s (~3 min)
 
 volatile bool wakeUpFlag = false;
+volatile bool isFirstWakeUp = true; // Flaga do pierwszego przebudzenia
 volatile bool silentWakeUpFlag = false;
 
 ISR(WDT_vect) {
@@ -51,26 +52,39 @@ void PowerManager::resetTimer() {
 
 void globalWakeUpISR() {
     silentWakeUpFlag = false;
-    wakeUpFlag = true;
+    if (isFirstWakeUp)
+    {
+        isFirstWakeUp = false;
+    } else
+    {
+        isFirstWakeUp = true;
+        wakeUpFlag = true;
+    }
+    
+    delay(400);
 }
 
 
 void PowerManager::goToSleep() {
-    // Serial.println("Ide w spanko");
     delay(100);
     lcd->clear();
     lcd->noBacklight();
 
-    pinMode(3, INPUT_PULLUP);    
-    pinMode(7, OUTPUT);
+    pinMode(3, INPUT_PULLUP);
+    pinMode(4, OUTPUT);
+    pinMode(6, OUTPUT);
     pinMode(8, OUTPUT);
     pinMode(12, OUTPUT);
-    digitalWrite(7, LOW);
+
+    digitalWrite(4, LOW);
+    digitalWrite(6, LOW);
     digitalWrite(8, LOW);
-    digitalWrite(12, LOW);    
+    digitalWrite(12, LOW);
+
+    delay(400); // Daj czas na wyłączenie urządzeń 
     
-    wakeUpCounter = 0;
     isSilentWakeUp = false;
+    wakeUpFlag = false;
 
     // Int pin 3
     attachInterrupt(digitalPinToInterrupt(3), globalWakeUpISR, FALLING);
@@ -82,7 +96,7 @@ void PowerManager::goToSleep() {
 
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-
+    
     while (!wakeUpFlag) {
         sleep_cpu(); // śpij, aż przerwanie coś zrobi
     }
@@ -93,10 +107,6 @@ void PowerManager::goToSleep() {
     // Wyłącz watchdog po przebudzeniu
     wdt_disable();
     
-    pinMode(3, OUTPUT);    
-    pinMode(7, INPUT_PULLUP);
-    pinMode(8, INPUT_PULLUP);
-    pinMode(12, INPUT_PULLUP);    
 }
 
 void PowerManager::wakeUp() {
