@@ -5,12 +5,15 @@ volatile uint8_t wakeUpCounter = 0;
 const uint8_t wakeUpThreshold = 8; // 23 * 8s ≈ 184s (~3 min)
 
 volatile bool wakeUpFlag = false;
-volatile bool isFirstWakeUp = true; // Flaga do pierwszego przebudzenia
+volatile bool isFirstWakeUp = true; 
 volatile bool silentWakeUpFlag = false;
 
 ISR(WDT_vect) {
     wakeUpCounter++;
+    delay(100);
     if (wakeUpCounter >= wakeUpThreshold) {
+        wakeUpCounter = 0; 
+        isFirstWakeUp = true; 
         wakeUpFlag = true;
         silentWakeUpFlag = true;
     }

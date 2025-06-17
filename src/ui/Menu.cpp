@@ -118,7 +118,7 @@ void Menu::lcdDrawMenu(){
                 lcd->print("4   * Edit   6");
                 lcd->write(byte(1));
                 lcd->setCursor(0, 1);
-                lcd->print("     RELAY");
+                lcd->print("      PLUG");
                 break;
             case SETTINGS:  
                 lcd->setCursor(0, 0);
@@ -126,7 +126,7 @@ void Menu::lcdDrawMenu(){
                 lcd->print("4  * Select  6");
                 lcd->write(byte(1));
                 lcd->setCursor(0, 1);
-                lcd->print(centerText("Settings"));
+                lcd->print(centerText("SETTINGS"));
                 break;
         }
 }
